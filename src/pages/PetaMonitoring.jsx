@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
-import { AlertTriangle, TrendingUp, Users, RefreshCw, List, Map as MapIcon, ChevronRight } from 'lucide-react'
+import { AlertTriangle, TrendingUp, Users, RefreshCw, List, Map as MapIcon, ChevronRight, Clock } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts'
 import IndonesiaMap from '../components/map/IndonesiaMap'
 import HudCard from '../components/common/HudCard'
@@ -156,6 +156,8 @@ const TABLE_COLS = [
   },
 ]
 
+const STALE_WARN_SECONDS = 300 // 5 minutes
+
 export default function PetaMonitoring() {
   const [params, setParams] = useSearchParams()
   const tab = params.get('tab') || 'peta'
@@ -163,6 +165,20 @@ export default function PetaMonitoring() {
 
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [selectedWilayahId, setSelectedWilayahId] = useState(null)
+  const [lastRefresh, setLastRefresh] = useState(() => Date.now())
+  const [staleSecs, setStaleSecs] = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(() => setStaleSecs(Math.floor((Date.now() - lastRefresh) / 1000)), 5000)
+    return () => clearInterval(id)
+  }, [lastRefresh])
+
+  const handleRefresh = () => {
+    setLastRefresh(Date.now())
+    setStaleSecs(0)
+  }
+
+  const isStale = staleSecs >= STALE_WARN_SECONDS
 
   const mapData = useMemo(() => {
     const d = {}
@@ -218,11 +234,25 @@ export default function PetaMonitoring() {
               {t.label}
             </button>
           ))}
-          <button style={{
-            display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px',
-            borderRadius: 8, border: '1px solid #1F2937', background: 'transparent',
-            color: '#7C8A99', fontSize: 11, cursor: 'pointer',
-          }}>
+          {isStale && (
+            <div style={{
+              display: 'flex', alignItems: 'center', gap: 5, padding: '5px 10px',
+              borderRadius: 8, border: '1px solid rgba(245,158,11,0.3)',
+              background: 'rgba(245,158,11,0.08)', color: '#F59E0B', fontSize: 10,
+            }}>
+              <Clock size={11} />
+              Data mungkin kadaluarsa · {Math.floor(staleSecs/60)}m
+            </div>
+          )}
+          <button onClick={handleRefresh}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 6, padding: '6px 12px',
+                    borderRadius: 8,
+                    border: isStale ? '1px solid rgba(245,158,11,0.4)' : '1px solid #1F2937',
+                    background: isStale ? 'rgba(245,158,11,0.1)' : 'transparent',
+                    color: isStale ? '#F59E0B' : '#7C8A99',
+                    fontSize: 11, cursor: 'pointer',
+                  }}>
             <RefreshCw size={12} /> Refresh
           </button>
         </div>

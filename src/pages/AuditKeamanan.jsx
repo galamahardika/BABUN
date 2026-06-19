@@ -1,7 +1,27 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react'
 import { ShieldCheck, Search, Download, Filter, X, ChevronRight, AlertTriangle, Activity, Lock, Database, Settings } from 'lucide-react'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, BarChart, Bar, Cell } from 'recharts'
-import auditData from '../data/audit.json'
+import auditSeed from '../data/audit.json'
+
+const ROW_HEIGHT = 40
+const OVERSCAN = 5
+const VIRTUAL_TOTAL = 10000
+
+// Expand 20 seed rows to 10k by cycling + mutating timestamps/IDs
+const auditData = (() => {
+  const rows = []
+  const now = Date.now()
+  for (let i = 0; i < VIRTUAL_TOTAL; i++) {
+    const seed = auditSeed[i % auditSeed.length]
+    const minsAgo = i * 0.5
+    rows.push({
+      ...seed,
+      id: `AUD-${String(VIRTUAL_TOTAL - i).padStart(6, '0')}`,
+      waktu: new Date(now - minsAgo * 60 * 1000).toISOString(),
+    })
+  }
+  return rows
+})()
 
 const RISIKO_META = {
   Kritis: { color: 'text-danger',    bg: 'bg-danger/10',    dot: 'bg-danger' },
@@ -102,6 +122,79 @@ const AKSI_DIST = [
   { name: 'Admin', val: 3 }, { name: 'Kritis', val: 1 }, { name: 'Akses', val: 1 },
 ]
 const BAR_COLORS = ['#3B82F6','#F59E0B','#A855F7','#6B7280','#EF4444','#22D3EE']
+
+function VirtualTable({ rows, onSelect }) {
+  const containerRef = useRef(null)
+  const [scrollTop, setScrollTop] = useState(0)
+  const [containerHeight, setContainerHeight] = useState(480)
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const ro = new ResizeObserver(entries => {
+      setContainerHeight(entries[0].contentRect.height)
+    })
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [])
+
+  const totalHeight = rows.length * ROW_HEIGHT
+  const startIdx = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - OVERSCAN)
+  const endIdx = Math.min(rows.length - 1, Math.ceil((scrollTop + containerHeight) / ROW_HEIGHT) + OVERSCAN)
+  const visible = rows.slice(startIdx, endIdx + 1)
+  const paddingTop = startIdx * ROW_HEIGHT
+  const paddingBottom = Math.max(0, (rows.length - endIdx - 1) * ROW_HEIGHT)
+
+  return (
+    <div ref={containerRef} style={{ height: 480, overflowY: 'auto', overflowX: 'auto', position: 'relative' }}
+         onScroll={e => setScrollTop(e.currentTarget.scrollTop)}>
+      <table className="w-full text-sm" style={{ borderCollapse: 'collapse', tableLayout: 'fixed', minWidth: 900 }}>
+        <thead style={{ position: 'sticky', top: 0, zIndex: 1, background: 'var(--color-surface, #131922)' }}>
+          <tr className="border-b border-border">
+            <th className="text-left px-4 py-2.5 text-xs text-text-muted font-medium" style={{ width: 140 }}>Waktu</th>
+            <th className="text-left px-4 py-2.5 text-xs text-text-muted font-medium" style={{ width: 120 }}>Pengguna</th>
+            <th className="text-left px-4 py-2.5 text-xs text-text-muted font-medium" style={{ width: 170 }}>Aksi</th>
+            <th className="text-left px-4 py-2.5 text-xs text-text-muted font-medium" style={{ width: 130 }}>Kategori</th>
+            <th className="text-left px-4 py-2.5 text-xs text-text-muted font-medium" style={{ width: 110 }}>Modul</th>
+            <th className="text-left px-4 py-2.5 text-xs text-text-muted font-medium" style={{ width: 90 }}>Risiko</th>
+            <th className="text-left px-4 py-2.5 text-xs text-text-muted font-medium" style={{ width: 100 }}>IP</th>
+            <th style={{ width: 32 }} />
+          </tr>
+        </thead>
+        <tbody>
+          <tr style={{ height: paddingTop }}><td colSpan={8} /></tr>
+          {visible.map(item => {
+            const katMeta = KATEGORI_META[item.kategori]
+            const KatIcon = katMeta?.icon || Activity
+            return (
+              <tr key={item.id}
+                  style={{ height: ROW_HEIGHT }}
+                  className="border-b border-border/50 hover:bg-white/5 cursor-pointer transition-colors"
+                  onClick={() => onSelect(item)}>
+                <td className="px-4 text-xs text-text-muted font-mono whitespace-nowrap">
+                  {new Date(item.waktu).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}
+                </td>
+                <td className="px-4 text-xs text-text-primary font-mono">{item.pengguna}</td>
+                <td className="px-4 text-xs font-mono text-text-secondary">{item.aksi}</td>
+                <td className="px-4">
+                  <span className={`inline-flex items-center gap-1 text-xs ${katMeta?.color || 'text-text-muted'}`}>
+                    <KatIcon size={11} /> {item.kategori}
+                  </span>
+                </td>
+                <td className="px-4 text-xs text-text-muted">{item.modul}</td>
+                <td className="px-4"><RisikoChip level={item.risiko} /></td>
+                <td className="px-4 text-xs text-text-muted font-mono">{item.ip}</td>
+                <td className="px-4 text-text-muted"><ChevronRight size={14} /></td>
+              </tr>
+            )
+          })}
+          <tr style={{ height: paddingBottom }}><td colSpan={8} /></tr>
+        </tbody>
+      </table>
+      {rows.length === 0 && <div className="text-center py-12 text-text-muted text-sm">Tidak ada log ditemukan.</div>}
+    </div>
+  )
+}
 
 export default function AuditKeamanan() {
   const [query, setQuery] = useState('')
@@ -262,51 +355,10 @@ export default function AuditKeamanan() {
             </div>
           )}
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left px-4 py-2.5 text-xs text-text-muted font-medium">Waktu</th>
-                  <th className="text-left px-4 py-2.5 text-xs text-text-muted font-medium">Pengguna</th>
-                  <th className="text-left px-4 py-2.5 text-xs text-text-muted font-medium">Aksi</th>
-                  <th className="text-left px-4 py-2.5 text-xs text-text-muted font-medium">Kategori</th>
-                  <th className="text-left px-4 py-2.5 text-xs text-text-muted font-medium">Modul</th>
-                  <th className="text-left px-4 py-2.5 text-xs text-text-muted font-medium">Risiko</th>
-                  <th className="text-left px-4 py-2.5 text-xs text-text-muted font-medium">IP</th>
-                  <th className="px-4 py-2.5"></th>
-                </tr>
-              </thead>
-              <tbody>
-                {results.map(item => {
-                  const katMeta = KATEGORI_META[item.kategori]
-                  const KatIcon = katMeta?.icon || Activity
-                  return (
-                    <tr key={item.id}
-                      className="border-b border-border/50 hover:bg-white/5 cursor-pointer transition-colors"
-                      onClick={() => setSelected(item)}>
-                      <td className="px-4 py-3 text-xs text-text-muted font-mono whitespace-nowrap">
-                        {new Date(item.waktu).toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' })}
-                      </td>
-                      <td className="px-4 py-3 text-xs text-text-primary font-mono">{item.pengguna}</td>
-                      <td className="px-4 py-3 text-xs font-mono text-text-secondary">{item.aksi}</td>
-                      <td className="px-4 py-3">
-                        <span className={`inline-flex items-center gap-1 text-xs ${katMeta?.color || 'text-text-muted'}`}>
-                          <KatIcon size={11} /> {item.kategori}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-xs text-text-muted">{item.modul}</td>
-                      <td className="px-4 py-3"><RisikoChip level={item.risiko} /></td>
-                      <td className="px-4 py-3 text-xs text-text-muted font-mono">{item.ip}</td>
-                      <td className="px-4 py-3 text-text-muted"><ChevronRight size={14} /></td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-            {results.length === 0 && <div className="text-center py-12 text-text-muted text-sm">Tidak ada log ditemukan.</div>}
-          </div>
-          <div className="px-5 py-2.5 border-t border-border text-xs text-text-muted">
-            Menampilkan {results.length} dari {auditData.length} entri log
+          <VirtualTable rows={results} onSelect={setSelected} />
+          <div className="px-5 py-2.5 border-t border-border text-xs text-text-muted flex items-center justify-between">
+            <span>Menampilkan {results.length.toLocaleString()} dari {auditData.length.toLocaleString()} entri log</span>
+            <span className="text-text-muted/50">Virtual scroll aktif · hanya baris yang terlihat di-render</span>
           </div>
         </div>
       </div>

@@ -10,6 +10,27 @@ const STATUS_META = {
 
 const JENIS_OPTS = ['Data Analisis', 'Laporan Intelijen', 'Log Anomali', 'Asesmen Ancaman', 'Laporan Observasi', 'Data Koordinasi']
 
+const KLASIFIKASI_OPTS = [
+  { value: 'TERBUKA',        color: '#22C55E', bg: 'rgba(34,197,94,0.1)',   border: 'rgba(34,197,94,0.25)',   desc: 'Dapat dibagikan secara umum' },
+  { value: 'TERBATAS',       color: '#3B82F6', bg: 'rgba(59,130,246,0.1)',  border: 'rgba(59,130,246,0.25)',  desc: 'Hanya untuk personel berwenang' },
+  { value: 'RAHASIA',        color: '#F59E0B', bg: 'rgba(245,158,11,0.1)',  border: 'rgba(245,158,11,0.25)',  desc: 'Sangat dibatasi, need-to-know' },
+  { value: 'SANGAT RAHASIA', color: '#EF4444', bg: 'rgba(239,68,68,0.1)',   border: 'rgba(239,68,68,0.25)',   desc: 'Klasifikasi tertinggi — akses khusus' },
+]
+
+function KlasifikasiBadge({ value }) {
+  const k = KLASIFIKASI_OPTS.find(o => o.value === value) || KLASIFIKASI_OPTS[0]
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 5,
+      padding: '2px 8px', borderRadius: 4, fontSize: 10, fontWeight: 700,
+      background: k.bg, color: k.color, border: `1px solid ${k.border}`,
+      fontFamily: 'JetBrains Mono, monospace', letterSpacing: '0.04em',
+    }}>
+      ▲ {value || 'TERBATAS'}
+    </span>
+  )
+}
+
 function StatusChip({ status }) {
   const m = STATUS_META[status] || STATUS_META.Menunggu
   const Icon = m.icon
@@ -33,8 +54,9 @@ function LogDetail({ item, lembaga, onClose }) {
           <button onClick={onClose} className="p-2 rounded hover:bg-white/5 text-text-muted"><X size={18} /></button>
         </div>
         <div className="flex-1 overflow-y-auto p-6 space-y-5">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <StatusChip status={item.status} />
+            {item.klasifikasi && <KlasifikasiBadge value={item.klasifikasi} />}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -96,7 +118,7 @@ function LogDetail({ item, lembaga, onClose }) {
 }
 
 function AjukanModal({ lembaga, onClose, onSubmit }) {
-  const [form, setForm] = useState({ tujuanId: '', jenis: '', justifikasi: '' })
+  const [form, setForm] = useState({ tujuanId: '', jenis: '', justifikasi: '', klasifikasi: 'TERBATAS' })
   const set = k => e => setForm(f => ({ ...f, [k]: e.target.value }))
   const valid = form.tujuanId && form.jenis && form.justifikasi.trim().length > 10
 
@@ -126,6 +148,33 @@ function AjukanModal({ lembaga, onClose, onSubmit }) {
               {JENIS_OPTS.map(j => <option key={j} value={j}>{j}</option>)}
             </select>
           </div>
+          {/* Klasifikasi data */}
+          <div>
+            <label className="block text-xs text-text-muted mb-2">Klasifikasi Data <span className="text-danger">*</span></label>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+              {KLASIFIKASI_OPTS.map(k => (
+                <label key={k.value} style={{
+                  display: 'flex', alignItems: 'flex-start', gap: 8, padding: '10px 12px',
+                  border: `1px solid ${form.klasifikasi === k.value ? k.border : 'rgba(31,41,55,0.8)'}`,
+                  borderRadius: 8, cursor: 'pointer',
+                  background: form.klasifikasi === k.value ? k.bg : 'transparent',
+                  transition: 'all 120ms',
+                }}>
+                  <input type="radio" name="klasifikasi" value={k.value}
+                         checked={form.klasifikasi === k.value}
+                         onChange={e => setForm(f => ({ ...f, klasifikasi: e.target.value }))}
+                         style={{ marginTop: 2, accentColor: k.color, flexShrink: 0 }} />
+                  <div>
+                    <p style={{ fontSize: 10, fontWeight: 700, color: k.color, fontFamily: 'JetBrains Mono, monospace', margin: 0, letterSpacing: '0.04em' }}>
+                      {k.value}
+                    </p>
+                    <p style={{ fontSize: 9, color: '#7C8A99', margin: '2px 0 0', lineHeight: 1.3 }}>{k.desc}</p>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+
           <div>
             <label className="block text-xs text-text-muted mb-1.5">Justifikasi <span className="text-text-muted">({form.justifikasi.length}/300)</span></label>
             <textarea value={form.justifikasi} onChange={set('justifikasi')} maxLength={300} rows={4}
@@ -165,6 +214,7 @@ export default function PertukaranInformasi() {
       asalId: 'BNPT', asal: 'BNPT Pusat',
       tujuanId: form.tujuanId, tujuan: lmb?.nama || '-',
       jenis: form.jenis, status: 'Menunggu',
+      klasifikasi: form.klasifikasi,
       pengajuAt: new Date().toISOString(),
       persetujuanAt: null, penyetuju: null,
       justifikasi: form.justifikasi,
