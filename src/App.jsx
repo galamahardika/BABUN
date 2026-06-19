@@ -8,6 +8,11 @@ import AnalisisAncaman from './pages/AnalisisAncaman'
 import DecisionSupport from './pages/DecisionSupport'
 import PetaMonitoring from './pages/PetaMonitoring'
 import EarlyWarning from './pages/EarlyWarning'
+import PertukaranInformasi from './pages/PertukaranInformasi'
+import LaporanIntelijen from './pages/LaporanIntelijen'
+import RepositoryData from './pages/RepositoryData'
+import AdminPengguna from './pages/AdminPengguna'
+import AuditKeamanan from './pages/AuditKeamanan'
 import PlaceholderPage from './pages/PlaceholderPage'
 
 const Wrap = ({ children }) => <AppShell>{children}</AppShell>
@@ -23,12 +28,12 @@ export default function App() {
         <Route path="/analisis-ancaman" element={<Wrap><AnalisisAncaman /></Wrap>} />
         <Route path="/early-warning" element={<Wrap><EarlyWarning /></Wrap>} />
         <Route path="/peta-monitoring" element={<Wrap><PetaMonitoring /></Wrap>} />
-        <Route path="/pertukaran-informasi" element={<Wrap><PlaceholderPage title="Pertukaran Informasi Antar Lembaga" code="A.7" /></Wrap>} />
-        <Route path="/laporan-intelijen" element={<Wrap><PlaceholderPage title="Manajemen Laporan Intelijen" code="A.9" /></Wrap>} />
-        <Route path="/repository-data" element={<Wrap><PlaceholderPage title="Repository Data Intelijen" code="A.10" /></Wrap>} />
+        <Route path="/pertukaran-informasi" element={<Wrap><PertukaranInformasi /></Wrap>} />
+        <Route path="/laporan-intelijen" element={<Wrap><LaporanIntelijen /></Wrap>} />
+        <Route path="/repository-data" element={<Wrap><RepositoryData /></Wrap>} />
         <Route path="/decision-support" element={<Wrap><DecisionSupport /></Wrap>} />
-        <Route path="/admin/pengguna" element={<Wrap><PlaceholderPage title="Pengguna & Hak Akses" code="A.12" /></Wrap>} />
-        <Route path="/admin/audit-keamanan" element={<Wrap><PlaceholderPage title="Audit & Kepatuhan Keamanan" code="A.13" /></Wrap>} />
+        <Route path="/admin/pengguna" element={<Wrap><AdminPengguna /></Wrap>} />
+        <Route path="/admin/audit-keamanan" element={<Wrap><AuditKeamanan /></Wrap>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

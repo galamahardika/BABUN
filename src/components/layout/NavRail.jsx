@@ -3,7 +3,7 @@ import { NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard, Map, AlertTriangle, Network, FileInput,
   BarChart3, ArrowLeftRight, FileText, Database, Brain,
-  Users, Shield, ChevronDown, ChevronRight
+  Users, Shield, ChevronDown, ChevronRight, PanelLeftClose, PanelLeftOpen
 } from 'lucide-react'
 
 const GROUPS = [
@@ -109,12 +109,15 @@ function Group({ group, expanded }) {
 }
 
 export default function NavRail() {
-  const [expanded, setExpanded] = useState(false)
+  const [pinned, setPinned] = useState(false)
+  const [hovered, setHovered] = useState(false)
+
+  const expanded = pinned || hovered
 
   return (
     <aside
-      onMouseEnter={() => setExpanded(true)}
-      onMouseLeave={() => setExpanded(false)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       className="nav-rail flex flex-col border-r shrink-0"
       style={{
         width: expanded ? 220 : 56,
@@ -124,7 +127,7 @@ export default function NavRail() {
         overflowY: 'auto',
         overflowX: 'hidden',
       }}>
-      {/* Logo */}
+      {/* Logo + toggle button */}
       <div className="flex items-center gap-3 px-3 py-3 border-b shrink-0"
            style={{ borderColor: '#1F2937', height: 48 }}>
         <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
@@ -132,10 +135,23 @@ export default function NavRail() {
           <span className="text-xs font-bold text-white" style={{ fontFamily: 'Space Grotesk' }}>A</span>
         </div>
         {expanded && (
-          <div>
-            <p className="text-xs font-bold leading-none" style={{ color: '#E8EDF2', fontFamily: 'Space Grotesk' }}>Sistem A</p>
-            <p className="text-xs leading-none mt-0.5" style={{ color: '#7C8A99', fontSize: 9 }}>BNPT Intel</p>
-          </div>
+          <>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-bold leading-none" style={{ color: '#E8EDF2', fontFamily: 'Space Grotesk' }}>Sistem A</p>
+              <p className="text-xs leading-none mt-0.5" style={{ color: '#7C8A99', fontSize: 9 }}>BNPT Intel</p>
+            </div>
+            <button
+              onClick={() => setPinned(v => !v)}
+              title={pinned ? 'Sembunyikan sidebar' : 'Pinkan sidebar'}
+              className="shrink-0 p-1 rounded-md transition-colors"
+              style={{ color: pinned ? '#3B82F6' : '#7C8A99' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+              {pinned
+                ? <PanelLeftClose size={15} />
+                : <PanelLeftOpen  size={15} />}
+            </button>
+          </>
         )}
       </div>
 

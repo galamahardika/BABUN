@@ -1,0 +1,25 @@
+{
+  "pengguna": [
+    { "id": "USR-001", "nama": "Admin Sistem", "username": "admin.sistem", "email": "admin@sim-latihan.internal", "peran": "Administrator", "satuan": "Pusat BNPT", "status": "Aktif", "terakhirAktif": "2024-03-15T08:42:00Z", "dibuatAt": "2023-01-01T00:00:00Z", "mfa": true },
+    { "id": "USR-002", "nama": "AP-Analis-001", "username": "analis.001", "email": "analis001@sim-latihan.internal", "peran": "Analis Senior", "satuan": "Pusat BNPT", "status": "Aktif", "terakhirAktif": "2024-03-15T07:55:00Z", "dibuatAt": "2023-03-15T00:00:00Z", "mfa": true },
+    { "id": "USR-003", "nama": "AP-Analis-003", "username": "analis.003", "email": "analis003@sim-latihan.internal", "peran": "Analis Senior", "satuan": "Pusat BNPT", "status": "Aktif", "terakhirAktif": "2024-03-15T06:10:00Z", "dibuatAt": "2023-03-15T00:00:00Z", "mfa": true },
+    { "id": "USR-004", "nama": "AP-Analis-007", "username": "analis.007", "email": "analis007@sim-latihan.internal", "peran": "Analis", "satuan": "SAT-W-02", "status": "Aktif", "terakhirAktif": "2024-03-14T22:30:00Z", "dibuatAt": "2023-06-01T00:00:00Z", "mfa": false },
+    { "id": "USR-005", "nama": "AP-Analis-009", "username": "analis.009", "email": "analis009@sim-latihan.internal", "peran": "Analis", "satuan": "SAT-W-03", "status": "Aktif", "terakhirAktif": "2024-03-13T14:00:00Z", "dibuatAt": "2023-06-01T00:00:00Z", "mfa": false },
+    { "id": "USR-006", "nama": "Koordinator Jawa", "username": "koor.jawa", "email": "koor.jawa@sim-latihan.internal", "peran": "Koordinator Wilayah", "satuan": "SAT-W-02", "status": "Aktif", "terakhirAktif": "2024-03-15T07:00:00Z", "dibuatAt": "2023-02-10T00:00:00Z", "mfa": true },
+    { "id": "USR-007", "nama": "Koordinator Timur", "username": "koor.timur", "email": "koor.timur@sim-latihan.internal", "peran": "Koordinator Wilayah", "satuan": "SAT-W-04", "status": "Aktif", "terakhirAktif": "2024-03-15T05:45:00Z", "dibuatAt": "2023-02-10T00:00:00Z", "mfa": true },
+    { "id": "USR-008", "nama": "Pimpinan BNPT", "username": "pimpinan", "email": "pimpinan@sim-latihan.internal", "peran": "Pimpinan", "satuan": "Pusat BNPT", "status": "Aktif", "terakhirAktif": "2024-03-15T08:00:00Z", "dibuatAt": "2023-01-01T00:00:00Z", "mfa": true },
+    { "id": "USR-009", "nama": "Operator Lapangan 1", "username": "op.lapangan.01", "email": "op01@sim-latihan.internal", "peran": "Operator", "satuan": "SAT-D-004", "status": "Aktif", "terakhirAktif": "2024-03-14T18:20:00Z", "dibuatAt": "2023-09-01T00:00:00Z", "mfa": false },
+    { "id": "USR-010", "nama": "Operator Lapangan 2", "username": "op.lapangan.02", "email": "op02@sim-latihan.internal", "peran": "Operator", "satuan": "SAT-D-007", "status": "Nonaktif", "terakhirAktif": "2024-02-20T10:00:00Z", "dibuatAt": "2023-09-01T00:00:00Z", "mfa": false },
+    { "id": "USR-011", "nama": "Auditor Keamanan", "username": "auditor.01", "email": "auditor01@sim-latihan.internal", "peran": "Auditor", "satuan": "Pusat BNPT", "status": "Aktif", "terakhirAktif": "2024-03-15T08:30:00Z", "dibuatAt": "2023-04-01T00:00:00Z", "mfa": true },
+    { "id": "USR-012", "nama": "Analis Magang", "username": "analis.magang.01", "email": "magang01@sim-latihan.internal", "peran": "Analis", "satuan": "Pusat BNPT", "status": "Ditangguhkan", "terakhirAktif": "2024-03-10T09:00:00Z", "dibuatAt": "2024-01-15T00:00:00Z", "mfa": false }
+  ],
+  "peran": [
+    { "id": "PERAN-01", "nama": "Administrator", "deskripsi": "Akses penuh ke seluruh modul dan konfigurasi sistem", "jumlahPengguna": 1, "modul": ["A.1","A.2","A.3","A.4","A.5","A.6","A.7","A.8","A.9","A.10","A.11","A.12","A.13"] },
+    { "id": "PERAN-02", "nama": "Pimpinan", "deskripsi": "Akses baca semua modul, tindakan pada DSS dan laporan", "jumlahPengguna": 1, "modul": ["A.1","A.3","A.4","A.5","A.6","A.8","A.9","A.10","A.11"] },
+    { "id": "PERAN-03", "nama": "Analis Senior", "deskripsi": "Input, analisis, dan distribusi laporan intelijen", "jumlahPengguna": 2, "modul": ["A.1","A.2","A.3","A.4","A.5","A.7","A.9","A.10"] },
+    { "id": "PERAN-04", "nama": "Analis", "deskripsi": "Input dan analisis data, tidak dapat mendistribusikan laporan", "jumlahPengguna": 3, "modul": ["A.2","A.3","A.4","A.5","A.10"] },
+    { "id": "PERAN-05", "nama": "Koordinator Wilayah", "deskripsi": "Koordinasi satuan wilayah, akses monitoring regional", "jumlahPengguna": 2, "modul": ["A.1","A.4","A.5","A.6","A.8","A.9"] },
+    { "id": "PERAN-06", "nama": "Operator", "deskripsi": "Input laporan lapangan dari satuan daerah", "jumlahPengguna": 2, "modul": ["A.2"] },
+    { "id": "PERAN-07", "nama": "Auditor", "deskripsi": "Akses baca log audit dan laporan kepatuhan", "jumlahPengguna": 1, "modul": ["A.13","A.10"] }
+  ]
+}

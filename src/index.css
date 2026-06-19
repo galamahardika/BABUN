@@ -2,9 +2,9 @@
 @import "tailwindcss";
 
 @theme {
+  /* Legacy aliases kept for inline-style consumers */
   --color-void: #0A0E13;
   --color-panel: #131922;
-  --color-elevated: #1A2230;
   --color-grid: #1F2937;
   --color-ink: #E8EDF2;
   --color-muted: #7C8A99;
@@ -14,6 +14,21 @@
   --color-sev-high: #F59E0B;
   --color-sev-moderate: #FACC15;
   --color-sev-success: #22C55E;
+
+  /* Semantic design tokens — these generate Tailwind utility classes */
+  --color-background: #0A0E13;
+  --color-surface: #131922;
+  --color-elevated: #1A2230;
+  --color-border: #1F2937;
+  --color-accent: #3B82F6;
+  --color-cyan: #22D3D8;
+  --color-danger: #EF4444;
+  --color-warning: #F59E0B;
+  --color-caution: #FACC15;
+  --color-success: #22C55E;
+  --color-text-primary: #E8EDF2;
+  --color-text-secondary: #B0BAC8;
+  --color-text-muted: #7C8A99;
 
   --font-display: 'Space Grotesk', sans-serif;
   --font-body: 'Inter', sans-serif;
@@ -66,3 +81,18 @@ body {
 .nav-rail-collapsed { width: 56px; }
 .nav-rail-expanded  { width: 220px; }
 .nav-rail { transition: width 200ms ease; overflow: hidden; }
+
+/* Global focus ring — keyboard navigation */
+:focus-visible {
+  outline: 2px solid #3B82F6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* Suppress focus ring for mouse clicks */
+:focus:not(:focus-visible) { outline: none; }
+
+/* Drawer slide-in — also suppress for reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .drawer-enter { animation: none; }
+  .nav-rail { transition: none; }
+}

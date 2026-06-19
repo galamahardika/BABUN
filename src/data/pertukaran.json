@@ -1,0 +1,90 @@
+{
+  "lembaga": [
+    { "id": "LMB-001", "nama": "Lembaga Mitra A", "singkatan": "LM-A", "jenis": "Penegakan Hukum", "status": "Terhubung",  "koneksiSejak": "2023-06-01" },
+    { "id": "LMB-002", "nama": "Lembaga Mitra B", "singkatan": "LM-B", "jenis": "Intelijen Nasional", "status": "Terhubung", "koneksiSejak": "2023-08-15" },
+    { "id": "LMB-003", "nama": "Lembaga Mitra C", "singkatan": "LM-C", "jenis": "Keamanan Siber",  "status": "Terhubung",  "koneksiSejak": "2024-01-10" },
+    { "id": "LMB-004", "nama": "Lembaga Mitra D", "singkatan": "LM-D", "jenis": "Koordinasi Regional", "status": "Tidak Aktif", "koneksiSejak": "2022-03-20" },
+    { "id": "LMB-005", "nama": "Lembaga Mitra E", "singkatan": "LM-E", "jenis": "Pemantauan Digital", "status": "Terhubung", "koneksiSejak": "2024-02-28" }
+  ],
+  "log": [
+    {
+      "id": "PTK-2024-0088",
+      "asalId": "BNPT",
+      "asal": "BNPT Pusat",
+      "tujuanId": "LMB-002",
+      "tujuan": "Lembaga Mitra B",
+      "jenis": "Data Analisis Indikator B-227",
+      "status": "Disetujui",
+      "pengajuAt": "2024-03-14T09:00:00Z",
+      "persetujuanAt": "2024-03-14T11:30:00Z",
+      "penyetuju": "AP-Analis-003",
+      "justifikasi": "Diperlukan untuk validasi silang temuan WIL-011 dengan data komparatif LM-B."
+    },
+    {
+      "id": "PTK-2024-0087",
+      "asalId": "LMB-001",
+      "asal": "Lembaga Mitra A",
+      "tujuanId": "BNPT",
+      "tujuan": "BNPT Pusat",
+      "jenis": "Laporan Observasi Lapangan Q1",
+      "status": "Disetujui",
+      "pengajuAt": "2024-03-13T14:00:00Z",
+      "persetujuanAt": "2024-03-13T15:45:00Z",
+      "penyetuju": "AP-Analis-001",
+      "justifikasi": "Pertukaran rutin triwulanan sesuai MoU 2023-LM-A."
+    },
+    {
+      "id": "PTK-2024-0086",
+      "asalId": "BNPT",
+      "asal": "BNPT Pusat",
+      "tujuanId": "LMB-003",
+      "tujuan": "Lembaga Mitra C",
+      "jenis": "Log Anomali Komunikasi Digital",
+      "status": "Menunggu",
+      "pengajuAt": "2024-03-15T05:30:00Z",
+      "persetujuanAt": null,
+      "penyetuju": null,
+      "justifikasi": "Koordinasi pasca-deteksi anomali komunikasi Indikator B-227 di WIL-011."
+    },
+    {
+      "id": "PTK-2024-0085",
+      "asalId": "LMB-005",
+      "asal": "Lembaga Mitra E",
+      "tujuanId": "BNPT",
+      "tujuan": "BNPT Pusat",
+      "jenis": "Ringkasan Pemantauan Digital Maret",
+      "status": "Menunggu",
+      "pengajuAt": "2024-03-15T04:00:00Z",
+      "persetujuanAt": null,
+      "penyetuju": null,
+      "justifikasi": "Laporan pemantauan rutin bulanan."
+    },
+    {
+      "id": "PTK-2024-0084",
+      "asalId": "BNPT",
+      "asal": "BNPT Pusat",
+      "tujuanId": "LMB-004",
+      "tujuan": "Lembaga Mitra D",
+      "jenis": "Data Koordinasi Regional WIL-009",
+      "status": "Ditolak",
+      "pengajuAt": "2024-03-12T10:00:00Z",
+      "persetujuanAt": "2024-03-12T16:00:00Z",
+      "penyetuju": "AP-Analis-007",
+      "justifikasi": "Koordinasi terkait Indikator A-089 WIL-009.",
+      "alasanTolak": "Lembaga Mitra D sedang dalam masa evaluasi konektivitas. Tunda hingga status aktif kembali."
+    },
+    {
+      "id": "PTK-2024-0083",
+      "asalId": "LMB-002",
+      "asal": "Lembaga Mitra B",
+      "tujuanId": "BNPT",
+      "tujuan": "BNPT Pusat",
+      "jenis": "Asesmen Ancaman Regional Q1",
+      "status": "Disetujui",
+      "pengajuAt": "2024-03-10T08:00:00Z",
+      "persetujuanAt": "2024-03-10T10:20:00Z",
+      "penyetuju": "AP-Analis-003",
+      "justifikasi": "Pertukaran data asesmen triwulanan bilateral."
+    }
+  ]
+}

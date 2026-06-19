@@ -1,21 +1,29 @@
+import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AlertTriangle, Radio, Users, ChevronRight, TrendingUp, Map } from 'lucide-react'
 import HudCard from '../components/common/HudCard'
 import SeverityBadge from '../components/common/SeverityBadge'
+import IndonesiaMap from '../components/map/IndonesiaMap'
 import dashboard from '../data/dashboard.json'
 import wilayah from '../data/wilayah.json'
 
 function MiniMap({ onViewFull }) {
-  const maxSkor = Math.max(...wilayah.map(w => w.skorRisiko))
-  const colorForLevel = { critical: '#EF4444', high: '#F59E0B', moderate: '#FACC15', low: '#22C55E' }
+  const mapData = useMemo(() => {
+    const d = {}
+    wilayah.forEach(w => { d[w.id] = w })
+    return d
+  }, [])
 
   return (
     <div style={{
       background: '#131922', border: '1px solid #1F2937', borderRadius: 12,
-      padding: 20, position: 'relative', overflow: 'hidden',
+      overflow: 'hidden',
     }}>
       {/* Header */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+      <div style={{
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        padding: '12px 16px', borderBottom: '1px solid #1F2937',
+      }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Map size={14} color="#3B82F6" />
           <span style={{ fontSize: 11, fontWeight: 600, color: '#7C8A99', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
@@ -28,36 +36,12 @@ function MiniMap({ onViewFull }) {
         </button>
       </div>
 
-      {/* Simplified map — bar chart as stand-in for GIS heat view */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6 }}>
-        {wilayah.map(w => {
-          const h = Math.round((w.skorRisiko / maxSkor) * 56) + 8
-          const color = colorForLevel[w.level] || '#7C8A99'
-          return (
-            <div key={w.id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}
-                 title={`${w.nama}: Skor ${w.skorRisiko}`}>
-              <div style={{
-                width: '100%', height: h, borderRadius: 4,
-                background: color + '33', border: `1px solid ${color}55`,
-                position: 'relative', overflow: 'hidden',
-              }}>
-                <div style={{
-                  position: 'absolute', bottom: 0, left: 0, right: 0,
-                  height: `${(w.skorRisiko / 100) * 100}%`,
-                  background: color + '44',
-                }} />
-              </div>
-              <span style={{ fontSize: 8, color: '#7C8A99', textAlign: 'center', lineHeight: 1.2, fontFamily: 'JetBrains Mono, monospace' }}>
-                {w.id.split('-')[1]}
-              </span>
-            </div>
-          )
-        })}
-      </div>
+      {/* Real SVG map — compact mode (no legend, no click-to-detail hint) */}
+      <IndonesiaMap data={mapData} compact />
 
       {/* Legend */}
-      <div style={{ display: 'flex', gap: 12, marginTop: 12, flexWrap: 'wrap' }}>
-        {[['critical','#EF4444','Kritis'],['high','#F59E0B','Tinggi'],['moderate','#FACC15','Sedang'],['low','#22C55E','Rendah']].map(([,c,l]) => (
+      <div style={{ display: 'flex', gap: 12, padding: '8px 16px', borderTop: '1px solid #1F2937', flexWrap: 'wrap' }}>
+        {[['#EF4444','Kritis'],['#F59E0B','Tinggi'],['#FACC15','Sedang'],['#22C55E','Rendah']].map(([c, l]) => (
           <div key={l} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <div style={{ width: 8, height: 8, borderRadius: 2, background: c }} />
             <span style={{ fontSize: 9, color: '#7C8A99' }}>{l}</span>

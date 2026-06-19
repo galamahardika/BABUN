@@ -1,0 +1,72 @@
+[
+  {
+    "id": "LAP-INT-2024-0047",
+    "judul": "Ringkasan Ancaman Mingguan — Periode 11–15 Maret 2024",
+    "template": "Laporan Mingguan",
+    "wilayah": "Multi-wilayah",
+    "lingkup": "Nasional",
+    "periode": "2024-03-11 s/d 2024-03-15",
+    "status": "Terdistribusi",
+    "penerima": ["Pimpinan BNPT", "Koordinator Wilayah Jawa", "Koordinator Wilayah Timur"],
+    "distribusiAt": "2024-03-15T07:00:00Z",
+    "penyusun": "AP-Analis-003",
+    "ringkasan": "Periode ini mencatat peningkatan signifikan skor risiko di WIL-004 (+18 poin) dan WIL-011 (+8 poin). Total 6 peringatan aktif dengan 3 berstatus Kritis. Rekomendasi DSS RK-2024-001 telah diadopsi.",
+    "seksi": ["Ringkasan Eksekutif", "Analisis Per Wilayah", "Status Early Warning", "Rekomendasi Strategis"]
+  },
+  {
+    "id": "LAP-INT-2024-0046",
+    "judul": "Laporan Analisis Pola Indikator A-104 — WIL-004",
+    "template": "Laporan Analisis Tematik",
+    "wilayah": "Wilayah Simulasi 4",
+    "lingkup": "Wilayah",
+    "periode": "2024-03-01 s/d 2024-03-14",
+    "status": "Menunggu Tinjauan",
+    "penerima": ["Pimpinan BNPT", "Koordinator Wilayah Jawa"],
+    "distribusiAt": null,
+    "penyusun": "AP-Analis-007",
+    "ringkasan": "Analisis mendalam pola Indikator A-104 selama 14 hari. Teridentifikasi 3 siklus pola berulang dengan interval 4–5 hari. Korelasi 82% dengan tren historis.",
+    "seksi": ["Metodologi Analisis", "Temuan Utama", "Pola Historis", "Implikasi", "Rekomendasi"]
+  },
+  {
+    "id": "LAP-INT-2024-0045",
+    "judul": "Update Situasi WIL-011 — Papua",
+    "template": "Laporan Situasi",
+    "wilayah": "Wilayah Simulasi 11",
+    "lingkup": "Wilayah",
+    "periode": "2024-03-13",
+    "status": "Terdistribusi",
+    "penerima": ["Koordinator Wilayah Timur", "Pimpinan BNPT"],
+    "distribusiAt": "2024-03-13T16:00:00Z",
+    "penyusun": "AP-Analis-001",
+    "ringkasan": "Pembaruan situasi harian WIL-011. Indikator B-227 masih aktif. Satuan Daerah Papua offline sejak 03:28 WIB.",
+    "seksi": ["Status Terkini", "Perkembangan Indikator", "Status Satuan", "Langkah Selanjutnya"]
+  },
+  {
+    "id": "LAP-INT-2024-0044",
+    "judul": "Laporan Bulanan Februari 2024 — Ringkasan Nasional",
+    "template": "Laporan Bulanan",
+    "wilayah": "Multi-wilayah",
+    "lingkup": "Nasional",
+    "periode": "2024-02-01 s/d 2024-02-29",
+    "status": "Terdistribusi",
+    "penerima": ["Pimpinan BNPT", "Seluruh Koordinator Wilayah", "Lembaga Mitra A"],
+    "distribusiAt": "2024-03-05T08:00:00Z",
+    "penyusun": "AP-Analis-003",
+    "ringkasan": "Bulan Februari relatif stabil. Rata-rata skor nasional 48,2. Tidak ada eskalasi kritis. Laporan kondisi basal bulan ini sebagai referensi komparatif.",
+    "seksi": ["Statistik Bulanan", "Tren Per Wilayah", "Kinerja Satuan", "Catatan Khusus"]
+  },
+  {
+    "id": "LAP-INT-2024-0043",
+    "judul": "Draft — Laporan Korelasi Indikator A-104 & B-227",
+    "template": "Laporan Analisis Tematik",
+    "wilayah": "Multi-wilayah",
+    "lingkup": "Tematik",
+    "periode": "2024-Q1",
+    "status": "Draft",
+    "penerima": [],
+    "distribusiAt": null,
+    "penyusun": "AP-Analis-009",
+    "ringkasan": "",
+    "seksi": ["Pendahuluan", "Metodologi", "Temuan", "Kesimpulan"]
+  }
+]
