@@ -1,0 +1,69 @@
+{
+  "ancamanNasional": {
+    "skor": 72,
+    "label": "Tinggi",
+    "level": "high",
+    "updateAt": "2024-03-15T06:30:00Z"
+  },
+  "peringatanAktif": {
+    "critical": 3,
+    "high": 7,
+    "moderate": 12,
+    "total": 22
+  },
+  "satuanOnline": {
+    "online": 34,
+    "total": 41,
+    "delay": 4,
+    "offline": 3
+  },
+  "rekomendasiTeratas": [
+    {
+      "id": "RK-2024-001",
+      "ringkasan": "Tingkatkan patroli virtual di Wilayah Simulasi 4 selama 72 jam ke depan",
+      "confidence": 87,
+      "wilayahId": "WIL-004",
+      "wilayah": "Wilayah Simulasi 4",
+      "status": "Baru"
+    },
+    {
+      "id": "RK-2024-002",
+      "ringkasan": "Koordinasi pertukaran data dengan Lembaga Mitra B terkait indikator A-104",
+      "confidence": 79,
+      "wilayahId": "WIL-007",
+      "wilayah": "Wilayah Simulasi 7",
+      "status": "Ditinjau"
+    },
+    {
+      "id": "RK-2024-003",
+      "ringkasan": "Validasi laporan WIL-011 mengenai pergerakan abnormal indikator B-227",
+      "confidence": 65,
+      "wilayahId": "WIL-011",
+      "wilayah": "Wilayah Simulasi 11",
+      "status": "Baru"
+    }
+  ],
+  "laporanTerbaru": [
+    {
+      "id": "LAP-2024-0891",
+      "judul": "Ringkasan Ancaman Mingguan — W.Sim 4 & 7",
+      "wilayah": "Multi-wilayah",
+      "status": "Terdistribusi",
+      "tanggal": "2024-03-14"
+    },
+    {
+      "id": "LAP-2024-0890",
+      "judul": "Laporan Analisis Pola Indikator A-104",
+      "wilayah": "Wilayah Simulasi 7",
+      "status": "Menunggu Tinjauan",
+      "tanggal": "2024-03-13"
+    },
+    {
+      "id": "LAP-2024-0889",
+      "judul": "Update Situasi Monitoring W.Sim 11",
+      "wilayah": "Wilayah Simulasi 11",
+      "status": "Terdistribusi",
+      "tanggal": "2024-03-13"
+    }
+  ]
+}

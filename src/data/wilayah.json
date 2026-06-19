@@ -1,0 +1,14 @@
+[
+  { "id": "WIL-001", "nama": "Wilayah Simulasi 1",  "provinsi": "Aceh",             "skorRisiko": 45, "level": "moderate", "laporan": 8,  "updateAt": "2024-03-15T05:00:00Z" },
+  { "id": "WIL-002", "nama": "Wilayah Simulasi 2",  "provinsi": "Sumatera Utara",   "skorRisiko": 38, "level": "moderate", "laporan": 5,  "updateAt": "2024-03-15T04:30:00Z" },
+  { "id": "WIL-003", "nama": "Wilayah Simulasi 3",  "provinsi": "Riau",             "skorRisiko": 29, "level": "low",      "laporan": 3,  "updateAt": "2024-03-15T03:45:00Z" },
+  { "id": "WIL-004", "nama": "Wilayah Simulasi 4",  "provinsi": "Jawa Barat",       "skorRisiko": 84, "level": "critical", "laporan": 21, "updateAt": "2024-03-15T06:15:00Z" },
+  { "id": "WIL-005", "nama": "Wilayah Simulasi 5",  "provinsi": "Jawa Tengah",      "skorRisiko": 51, "level": "high",     "laporan": 11, "updateAt": "2024-03-15T05:30:00Z" },
+  { "id": "WIL-006", "nama": "Wilayah Simulasi 6",  "provinsi": "DI Yogyakarta",    "skorRisiko": 22, "level": "low",      "laporan": 2,  "updateAt": "2024-03-14T22:00:00Z" },
+  { "id": "WIL-007", "nama": "Wilayah Simulasi 7",  "provinsi": "Jawa Timur",       "skorRisiko": 67, "level": "high",     "laporan": 14, "updateAt": "2024-03-15T05:50:00Z" },
+  { "id": "WIL-008", "nama": "Wilayah Simulasi 8",  "provinsi": "Sulawesi Selatan", "skorRisiko": 41, "level": "moderate", "laporan": 7,  "updateAt": "2024-03-15T04:00:00Z" },
+  { "id": "WIL-009", "nama": "Wilayah Simulasi 9",  "provinsi": "Sulawesi Tengah",  "skorRisiko": 58, "level": "high",     "laporan": 9,  "updateAt": "2024-03-15T05:10:00Z" },
+  { "id": "WIL-010", "nama": "Wilayah Simulasi 10", "provinsi": "Kalimantan Timur", "skorRisiko": 35, "level": "moderate", "laporan": 6,  "updateAt": "2024-03-15T03:30:00Z" },
+  { "id": "WIL-011", "nama": "Wilayah Simulasi 11", "provinsi": "Papua",            "skorRisiko": 73, "level": "high",     "laporan": 16, "updateAt": "2024-03-15T06:00:00Z" },
+  { "id": "WIL-012", "nama": "Wilayah Simulasi 12", "provinsi": "Maluku",           "skorRisiko": 47, "level": "moderate", "laporan": 8,  "updateAt": "2024-03-15T04:20:00Z" }
+]
