@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { RefreshCw, PlusCircle, ChevronDown, Wifi, WifiOff, AlertCircle, Users, Clock, Activity, X } from 'lucide-react'
+import { useState, useRef, useCallback, useEffect } from 'react'
+import { RefreshCw, PlusCircle, ChevronDown, Wifi, WifiOff, AlertCircle, Users, Clock, Activity, X, Search } from 'lucide-react'
 import OrgTreeViewer from '../components/org/OrgTreeViewer'
 import Stepper from '../components/common/Stepper'
 import SeverityBadge from '../components/common/SeverityBadge'
@@ -199,12 +199,158 @@ function RegistrasiModal({ onClose, onSubmit }) {
   )
 }
 
+function flattenNodes(jaringan) {
+  const nodes = []
+  nodes.push({ ...jaringan.pusat, type: 'pusat', _path: jaringan.pusat.nama })
+  jaringan.wilayah.forEach(w => {
+    nodes.push({ ...w, type: 'wilayah', _path: w.nama })
+    w.satuan.forEach(s => {
+      nodes.push({ ...s, type: 'satuan', _path: `${w.nama} > ${s.nama}` })
+    })
+  })
+  return nodes
+}
+
+const STATUS_DOT_CFG = {
+  online:  '#22C55E',
+  delay:   '#F59E0B',
+  offline: '#EF4444',
+}
+
+function TreeSearch({ jaringan, selected, onSelect, query, onQueryChange }) {
+  const inputRef = useRef(null)
+  const [focusedIdx, setFocusedIdx] = useState(0)
+  const itemRefs = useRef([])
+
+  const allNodes = flattenNodes(jaringan)
+  const q = query.toLowerCase().trim()
+  const results = q
+    ? allNodes.filter(n =>
+        n.nama?.toLowerCase().includes(q) ||
+        n.id?.toLowerCase().includes(q) ||
+        n.singkatan?.toLowerCase().includes(q)
+      )
+    : []
+
+  useEffect(() => { setFocusedIdx(0) }, [q])
+
+  const handleKey = useCallback((e) => {
+    if (!q) return
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setFocusedIdx(i => {
+        const next = Math.min(i + 1, results.length - 1)
+        itemRefs.current[next]?.scrollIntoView({ block: 'nearest' })
+        return next
+      })
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setFocusedIdx(i => {
+        const prev = Math.max(i - 1, 0)
+        itemRefs.current[prev]?.scrollIntoView({ block: 'nearest' })
+        return prev
+      })
+    } else if (e.key === 'Enter') {
+      if (results[focusedIdx]) onSelect(results[focusedIdx])
+    } else if (e.key === 'Escape') {
+      onQueryChange('')
+      inputRef.current?.blur()
+    }
+  }, [q, results, focusedIdx, onSelect, onQueryChange])
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%', overflow: 'hidden' }}>
+      {/* Search input */}
+      <div style={{ padding: '8px 10px', borderBottom: '1px solid #1F2937', flexShrink: 0 }}>
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 7,
+          background: '#1A2230', border: '1px solid #1F2937', borderRadius: 8,
+          padding: '6px 10px',
+        }}>
+          <Search size={13} color="#7C8A99" style={{ flexShrink: 0 }} />
+          <input
+            ref={inputRef}
+            value={query}
+            onChange={e => onQueryChange(e.target.value)}
+            onKeyDown={handleKey}
+            placeholder="Cari satuan / korwil…  ↑↓ Enter"
+            style={{
+              flex: 1, background: 'none', border: 'none', outline: 'none',
+              color: '#E8EDF2', fontSize: 12, fontFamily: 'Inter',
+            }}
+          />
+          {query && (
+            <button onClick={() => onQueryChange('')}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex' }}>
+              <X size={12} color="#7C8A99" />
+            </button>
+          )}
+        </div>
+        {q && (
+          <p style={{ fontSize: 10, color: '#7C8A99', margin: '5px 4px 0', fontFamily: 'JetBrains Mono, monospace' }}>
+            {results.length} hasil
+          </p>
+        )}
+      </div>
+
+      {/* Results or tree */}
+      {q ? (
+        <div style={{ flex: 1, overflowY: 'auto', padding: '6px 8px' }}>
+          {results.length === 0 ? (
+            <div style={{ textAlign: 'center', padding: '28px 16px', color: '#7C8A99' }}>
+              <Search size={20} style={{ opacity: 0.2, marginBottom: 8 }} />
+              <p style={{ fontSize: 12 }}>Tidak ditemukan</p>
+            </div>
+          ) : results.map((node, i) => {
+            const isFocused = i === focusedIdx
+            const isSelected = selected?.id === node.id
+            const dotColor = STATUS_DOT_CFG[node.status] || '#374151'
+            return (
+              <div
+                key={node.id}
+                ref={el => { itemRefs.current[i] = el }}
+                onClick={() => onSelect(node)}
+                onMouseEnter={() => setFocusedIdx(i)}
+                style={{
+                  padding: '9px 11px', borderRadius: 8, marginBottom: 4, cursor: 'pointer',
+                  border: `1px solid ${isFocused || isSelected ? 'rgba(59,130,246,0.35)' : '#1F2937'}`,
+                  background: isFocused || isSelected ? 'rgba(59,130,246,0.1)' : 'transparent',
+                  transition: 'all 100ms',
+                }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  {node.status && <div style={{ width: 7, height: 7, borderRadius: '50%', background: dotColor, flexShrink: 0, boxShadow: node.status === 'online' ? `0 0 5px ${dotColor}88` : 'none' }} />}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 12, color: '#E8EDF2', margin: 0, fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {node.nama}
+                    </p>
+                    <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#7C8A99', margin: '2px 0 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {node._path}
+                    </p>
+                  </div>
+                  <span style={{ fontSize: 9, color: '#374151', flexShrink: 0, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                    {node.type}
+                  </span>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      ) : (
+        <div style={{ flex: 1, overflow: 'hidden' }}>
+          <OrgTreeViewer data={jaringan} selected={selected} onSelect={onSelect} />
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function JaringanIntelijen() {
   const [jaringan, setJaringan] = useState(jaringanRaw)
   const [selected, setSelected] = useState(null)
   const [filterWil, setFilterWil] = useState('Semua Wilayah')
   const [showModal, setShowModal] = useState(false)
   const [syncingId, setSyncingId] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const totalOnline  = jaringan.wilayah.flatMap(w => w.satuan).filter(s => s.status === 'online').length
   const totalDelay   = jaringan.wilayah.flatMap(w => w.satuan).filter(s => s.status === 'delay').length
@@ -325,15 +471,18 @@ export default function JaringanIntelijen() {
 
       {/* Main layout */}
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-        {/* Org tree */}
+        {/* Org tree with search */}
         <div style={{
           width: 320, borderRight: '1px solid #1F2937',
           background: '#0A0E13', flexShrink: 0, overflow: 'hidden',
+          display: 'flex', flexDirection: 'column',
         }}>
-          <OrgTreeViewer
-            data={{ ...jaringan, wilayah: filteredWilayah }}
+          <TreeSearch
+            jaringan={{ ...jaringan, wilayah: filteredWilayah }}
             selected={selected}
             onSelect={setSelected}
+            query={searchQuery}
+            onQueryChange={setSearchQuery}
           />
         </div>
 
