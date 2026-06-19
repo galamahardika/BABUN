@@ -1,0 +1,100 @@
+[
+  {
+    "id": "EWS-2024-0041",
+    "wilayahId": "WIL-004",
+    "wilayah": "Wilayah Simulasi 4",
+    "provinsi": "Jawa Barat",
+    "indikator": "Indikator A-104: Pola pergerakan abnormal terdeteksi",
+    "level": "critical",
+    "waktu": "2024-03-15T06:12:00Z",
+    "status": "Baru",
+    "penerima": ["Analis Pusat", "Koordinator Wilayah 4", "Pimpinan"],
+    "eskalasi": [
+      { "title": "Indikator A-104 terpicu", "time": "06:12:00", "level": "critical", "desc": "Ambang batas terlampaui: nilai 94 (batas: 75)" },
+      { "title": "Notifikasi dikirim ke 3 penerima", "time": "06:12:05", "level": "info", "desc": "Email + push notification" },
+      { "title": "Menunggu konfirmasi analis", "time": "06:12:05", "level": "moderate", "desc": null }
+    ]
+  },
+  {
+    "id": "EWS-2024-0040",
+    "wilayahId": "WIL-011",
+    "wilayah": "Wilayah Simulasi 11",
+    "provinsi": "Papua",
+    "indikator": "Indikator B-227: Anomali komunikasi jaringan terdeteksi",
+    "level": "high",
+    "waktu": "2024-03-15T05:47:00Z",
+    "status": "Ditinjau",
+    "penerima": ["Analis Pusat", "Koordinator Wilayah 11"],
+    "eskalasi": [
+      { "title": "Indikator B-227 terpicu", "time": "05:47:00", "level": "high", "desc": "Nilai 68 (batas: 60)" },
+      { "title": "Notifikasi dikirim ke 2 penerima", "time": "05:47:03", "level": "info", "desc": null },
+      { "title": "Ditinjau oleh Analis AP-007", "time": "05:55:12", "level": "success", "desc": "Status berubah ke Ditinjau" }
+    ]
+  },
+  {
+    "id": "EWS-2024-0039",
+    "wilayahId": "WIL-007",
+    "wilayah": "Wilayah Simulasi 7",
+    "provinsi": "Jawa Timur",
+    "indikator": "Indikator C-312: Lonjakan volume data observasi",
+    "level": "high",
+    "waktu": "2024-03-15T04:30:00Z",
+    "status": "Eskalasi",
+    "penerima": ["Analis Pusat", "Koordinator Wilayah 7", "Pimpinan"],
+    "eskalasi": [
+      { "title": "Indikator C-312 terpicu", "time": "04:30:00", "level": "high", "desc": "Nilai 71 (batas: 65)" },
+      { "title": "Notifikasi dikirim", "time": "04:30:04", "level": "info", "desc": null },
+      { "title": "Ditinjau — diputuskan eskalasi", "time": "04:45:30", "level": "high", "desc": "Eskalasi ke Pimpinan" },
+      { "title": "Menunggu keputusan Pimpinan", "time": "04:45:31", "level": "moderate", "desc": null }
+    ]
+  },
+  {
+    "id": "EWS-2024-0038",
+    "wilayahId": "WIL-009",
+    "wilayah": "Wilayah Simulasi 9",
+    "provinsi": "Sulawesi Tengah",
+    "indikator": "Indikator A-089: Frekuensi kontak jaringan meningkat",
+    "level": "moderate",
+    "waktu": "2024-03-15T03:15:00Z",
+    "status": "Ditinjau",
+    "penerima": ["Analis Pusat"],
+    "eskalasi": [
+      { "title": "Indikator A-089 terpicu", "time": "03:15:00", "level": "moderate", "desc": "Nilai 52 (batas: 50)" },
+      { "title": "Notifikasi dikirim", "time": "03:15:02", "level": "info", "desc": null },
+      { "title": "Ditinjau oleh Analis AP-012", "time": "03:28:44", "level": "success", "desc": null }
+    ]
+  },
+  {
+    "id": "EWS-2024-0037",
+    "wilayahId": "WIL-004",
+    "wilayah": "Wilayah Simulasi 4",
+    "provinsi": "Jawa Barat",
+    "indikator": "Indikator D-441: Pola waktu aktivitas tidak lazim",
+    "level": "high",
+    "waktu": "2024-03-15T01:50:00Z",
+    "status": "Selesai",
+    "penerima": ["Analis Pusat", "Koordinator Wilayah 4"],
+    "eskalasi": [
+      { "title": "Indikator D-441 terpicu", "time": "01:50:00", "level": "high", "desc": "Nilai 78 (batas: 70)" },
+      { "title": "Notifikasi dikirim", "time": "01:50:03", "level": "info", "desc": null },
+      { "title": "Ditinjau oleh Analis AP-003", "time": "02:05:11", "level": "success", "desc": null },
+      { "title": "Peringatan ditutup", "time": "02:30:00", "level": "success", "desc": "Tidak ada tindakan lanjut diperlukan" }
+    ]
+  },
+  {
+    "id": "EWS-2024-0036",
+    "wilayahId": "WIL-005",
+    "wilayah": "Wilayah Simulasi 5",
+    "provinsi": "Jawa Tengah",
+    "indikator": "Indikator B-115: Aktivitas observasi terjadwal terlewat",
+    "level": "moderate",
+    "waktu": "2024-03-14T22:10:00Z",
+    "status": "Selesai",
+    "penerima": ["Koordinator Wilayah 5"],
+    "eskalasi": [
+      { "title": "Indikator B-115 terpicu", "time": "22:10:00", "level": "moderate", "desc": null },
+      { "title": "Notifikasi dikirim", "time": "22:10:02", "level": "info", "desc": null },
+      { "title": "Peringatan ditutup otomatis (timeout)", "time": "22:40:00", "level": "success", "desc": "Tidak ada respons dalam 30 menit" }
+    ]
+  }
+]
