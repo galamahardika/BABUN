@@ -1,0 +1,85 @@
+{
+  "kasusAktif": [
+    {
+      "id": "KS-2024-004",
+      "wilayahId": "WIL-004",
+      "wilayah": "Wilayah Simulasi 4",
+      "provinsi": "Jawa Barat",
+      "skorRisiko": 84,
+      "level": "critical",
+      "pola": "Pola Aktivitas + Pola Waktu",
+      "laporanSumber": ["LAP-2024-0891", "LAP-2024-0887"],
+      "analis": "AP-Analis-003",
+      "updateAt": "2024-03-15T06:00:00Z"
+    },
+    {
+      "id": "KS-2024-011",
+      "wilayahId": "WIL-011",
+      "wilayah": "Wilayah Simulasi 11",
+      "provinsi": "Papua",
+      "skorRisiko": 73,
+      "level": "high",
+      "pola": "Anomali Komunikasi + Pergerakan",
+      "laporanSumber": ["LAP-2024-0890", "LAP-2024-0889"],
+      "analis": "AP-Analis-007",
+      "updateAt": "2024-03-15T05:30:00Z"
+    },
+    {
+      "id": "KS-2024-007",
+      "wilayahId": "WIL-007",
+      "wilayah": "Wilayah Simulasi 7",
+      "provinsi": "Jawa Timur",
+      "skorRisiko": 67,
+      "level": "high",
+      "pola": "Lonjakan Volume Data",
+      "laporanSumber": ["LAP-2024-0889"],
+      "analis": "AP-Analis-009",
+      "updateAt": "2024-03-15T04:00:00Z"
+    },
+    {
+      "id": "KS-2024-009",
+      "wilayahId": "WIL-009",
+      "wilayah": "Wilayah Simulasi 9",
+      "provinsi": "Sulawesi Tengah",
+      "skorRisiko": 58,
+      "level": "high",
+      "pola": "Frekuensi Kontak Jaringan",
+      "laporanSumber": ["LAP-2024-0888"],
+      "analis": "AP-Analis-001",
+      "updateAt": "2024-03-15T03:00:00Z"
+    },
+    {
+      "id": "KS-2024-005",
+      "wilayahId": "WIL-005",
+      "wilayah": "Wilayah Simulasi 5",
+      "provinsi": "Jawa Tengah",
+      "skorRisiko": 51,
+      "level": "high",
+      "pola": "Aktivitas Observasi Terlewat",
+      "laporanSumber": [],
+      "analis": "AP-Analis-012",
+      "updateAt": "2024-03-14T20:00:00Z"
+    },
+    {
+      "id": "KS-2024-012",
+      "wilayahId": "WIL-012",
+      "wilayah": "Wilayah Simulasi 12",
+      "provinsi": "Maluku",
+      "skorRisiko": 47,
+      "level": "moderate",
+      "pola": "Observasi Rutin",
+      "laporanSumber": [],
+      "analis": "AP-Analis-005",
+      "updateAt": "2024-03-14T18:00:00Z"
+    }
+  ],
+  "trenMultiWilayah": {
+    "labels": ["-29","-26","-23","-20","-17","-14","-11","-8","-5","-2","0"],
+    "series": [
+      { "wilayahId": "WIL-004", "nama": "W.Sim 4", "color": "#EF4444", "data": [55,58,60,62,65,68,72,76,79,82,84] },
+      { "wilayahId": "WIL-011", "nama": "W.Sim 11", "color": "#F59E0B", "data": [55,57,59,61,62,64,66,68,70,72,73] },
+      { "wilayahId": "WIL-007", "nama": "W.Sim 7",  "color": "#FACC15", "data": [50,52,54,55,57,59,61,63,65,66,67] },
+      { "wilayahId": "WIL-009", "nama": "W.Sim 9",  "color": "#22D3D8", "data": [44,46,47,49,50,52,53,55,56,57,58] }
+    ]
+  }
+}

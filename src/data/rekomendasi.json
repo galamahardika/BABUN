@@ -1,0 +1,71 @@
+[
+  {
+    "id": "RK-2024-001",
+    "ringkasan": "Tingkatkan patroli virtual di Wilayah Simulasi 4 selama 72 jam ke depan berdasarkan eskalasi Indikator A-104",
+    "rasional": "Skor risiko WIL-004 meningkat 18 poin dalam 7 hari terakhir. Indikator A-104 terpicu 3x berturut-turut. Pola historis menunjukkan korelasi 82% dengan eskalasi lanjutan jika tidak direspons dalam 48 jam.",
+    "confidence": 87,
+    "wilayahId": "WIL-004",
+    "wilayah": "Wilayah Simulasi 4",
+    "analis": "AP-Analis-003",
+    "tanggal": "2024-03-15T04:00:00Z",
+    "status": "Baru",
+    "parameter": {
+      "intensitasPatroli": 75,
+      "alokasiSumber": 60,
+      "durasiHari": 3
+    },
+    "proyeksi": [72,71,70,68,65,62,60,58,57,56,55,54,54,53,52]
+  },
+  {
+    "id": "RK-2024-002",
+    "ringkasan": "Koordinasi pertukaran data dengan Lembaga Mitra B terkait Indikator B-227 di Wilayah Simulasi 11",
+    "rasional": "Data komparatif dari Lembaga Mitra B dapat meningkatkan akurasi asesmen WIL-011 sebesar estimasi 15-25%. Indikator B-227 memiliki preseden validasi silang yang berhasil di 2 kasus historis.",
+    "confidence": 79,
+    "wilayahId": "WIL-011",
+    "wilayah": "Wilayah Simulasi 11",
+    "analis": "AP-Analis-007",
+    "tanggal": "2024-03-14T16:00:00Z",
+    "status": "Ditinjau",
+    "parameter": {
+      "intensitasPatroli": 40,
+      "alokasiBerbagi": 80,
+      "durasiHari": 7
+    },
+    "proyeksi": [67,66,65,64,63,62,60,59,58,57,56,55,54,53,52]
+  },
+  {
+    "id": "RK-2024-003",
+    "ringkasan": "Validasi laporan WIL-011 mengenai pergerakan abnormal Indikator B-227 sebelum eskalasi lebih lanjut",
+    "rasional": "Terdapat 2 laporan dari sumber berbeda dengan keyakinan sedang-rendah. Diperlukan konfirmasi sumber ketiga sebelum mengalokasikan sumber daya respons.",
+    "confidence": 65,
+    "wilayahId": "WIL-011",
+    "wilayah": "Wilayah Simulasi 11",
+    "analis": "AP-Analis-001",
+    "tanggal": "2024-03-14T10:00:00Z",
+    "status": "Diadopsi",
+    "parameter": {
+      "intensitasValidasi": 90,
+      "alokasiBerbagi": 30,
+      "durasiHari": 2
+    },
+    "proyeksi": [73,72,71,70,69,68,67,66,65,64,64,63,63,62,62]
+  },
+  {
+    "id": "RK-2024-004",
+    "ringkasan": "Realokasi 2 unit observasi dari WIL-006 ke WIL-007 mengikuti tren kenaikan skor risiko",
+    "rasional": "WIL-006 menunjukkan skor stabil (<25) selama 14 hari. WIL-007 mengalami kenaikan konsisten ke level 67. Realokasi sementara dinilai efisien secara operasional.",
+    "confidence": 72,
+    "wilayahId": "WIL-007",
+    "wilayah": "Wilayah Simulasi 7",
+    "analis": "AP-Analis-009",
+    "tanggal": "2024-03-13T09:00:00Z",
+    "status": "Ditolak",
+    "alasanTolak": "Realokasi tidak disetujui — WIL-006 memerlukan coverage minimum.",
+    "parameter": {
+      "unitDipindah": 2,
+      "intensitasPatroli": 55,
+      "durasiHari": 14
+    },
+    "proyeksi": [65,64,63,62,61,60,59,58,57,56,56,55,55,54,54]
+  }
+]
