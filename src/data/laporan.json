@@ -1,0 +1,102 @@
+[
+  {
+    "id": "LAP-2024-0891",
+    "judul": "Laporan Observasi — Pola Aktivitas Indikator A-104",
+    "wilayahId": "WIL-004",
+    "wilayah": "Wilayah Simulasi 4",
+    "kategori": "Pola Aktivitas",
+    "keyakinan": "Tinggi",
+    "status": "Terverifikasi",
+    "narasi": "Observasi lapangan mencatat peningkatan frekuensi aktivitas indikator A-104 di sektor utara wilayah simulasi 4. Data pendukung mencakup 3 sumber primer dengan tingkat keyakinan konsisten.",
+    "pengirim": "AD-Analis-012",
+    "pemvalidasi": "AP-Analis-003",
+    "submitAt": "2024-03-14T08:30:00Z",
+    "validasiAt": "2024-03-14T11:45:00Z",
+    "lampiran": 2,
+    "riwayat": [
+      { "title": "Laporan dikirim", "time": "08:30:00", "level": "info", "desc": "Oleh AD-Analis-012" },
+      { "title": "Masuk antrian validasi", "time": "08:30:05", "level": "info", "desc": null },
+      { "title": "Divalidasi", "time": "11:45:22", "level": "success", "desc": "Oleh AP-Analis-003" }
+    ]
+  },
+  {
+    "id": "LAP-2024-0890",
+    "judul": "Laporan Anomali Komunikasi — Indikator B-227",
+    "wilayahId": "WIL-011",
+    "wilayah": "Wilayah Simulasi 11",
+    "kategori": "Anomali Komunikasi",
+    "keyakinan": "Sedang",
+    "status": "Dalam Validasi",
+    "narasi": "Terdeteksi pola komunikasi tidak lazim di periode 00:00–04:00. Frekuensi melebihi baseline 48% dalam 5 hari terakhir. Sumber: observasi jaringan sensor W-11.",
+    "pengirim": "AD-Analis-007",
+    "pemvalidasi": null,
+    "submitAt": "2024-03-15T04:15:00Z",
+    "validasiAt": null,
+    "lampiran": 1,
+    "riwayat": [
+      { "title": "Laporan dikirim", "time": "04:15:00", "level": "info", "desc": "Oleh AD-Analis-007" },
+      { "title": "Masuk antrian validasi", "time": "04:15:05", "level": "info", "desc": null },
+      { "title": "Diambil untuk divalidasi", "time": "05:00:11", "level": "moderate", "desc": "Oleh AP-Analis-009" }
+    ]
+  },
+  {
+    "id": "LAP-2024-0889",
+    "judul": "Laporan Pergerakan Abnormal Indikator C-312",
+    "wilayahId": "WIL-007",
+    "wilayah": "Wilayah Simulasi 7",
+    "kategori": "Pola Pergerakan",
+    "keyakinan": "Rendah",
+    "status": "Baru",
+    "narasi": "Teridentifikasi perubahan pola rute yang menyimpang dari baseline historis. Data bersumber dari 1 sumber lapangan dengan keyakinan rendah; diperlukan konfirmasi sumber tambahan.",
+    "pengirim": "AD-Analis-019",
+    "pemvalidasi": null,
+    "submitAt": "2024-03-15T06:00:00Z",
+    "validasiAt": null,
+    "lampiran": 0,
+    "riwayat": [
+      { "title": "Laporan dikirim", "time": "06:00:00", "level": "info", "desc": "Oleh AD-Analis-019" },
+      { "title": "Masuk antrian validasi", "time": "06:00:04", "level": "info", "desc": null }
+    ]
+  },
+  {
+    "id": "LAP-2024-0888",
+    "judul": "Laporan Observasi Rutin — Wilayah Simulasi 9",
+    "wilayahId": "WIL-009",
+    "wilayah": "Wilayah Simulasi 9",
+    "kategori": "Observasi Rutin",
+    "keyakinan": "Tinggi",
+    "status": "Terverifikasi",
+    "narasi": "Laporan observasi rutin minggu ke-11. Tidak ada anomali signifikan. Koneksi satuan stabil. Indikator baseline normal.",
+    "pengirim": "AD-Analis-031",
+    "pemvalidasi": "AP-Analis-001",
+    "submitAt": "2024-03-13T09:00:00Z",
+    "validasiAt": "2024-03-13T12:30:00Z",
+    "lampiran": 1,
+    "riwayat": [
+      { "title": "Laporan dikirim", "time": "09:00:00", "level": "info", "desc": "Oleh AD-Analis-031" },
+      { "title": "Masuk antrian validasi", "time": "09:00:05", "level": "info", "desc": null },
+      { "title": "Divalidasi", "time": "12:30:44", "level": "success", "desc": "Oleh AP-Analis-001" }
+    ]
+  },
+  {
+    "id": "LAP-2024-0887",
+    "judul": "Laporan Indikator D-441 — Pola Waktu Tidak Lazim",
+    "wilayahId": "WIL-004",
+    "wilayah": "Wilayah Simulasi 4",
+    "kategori": "Pola Waktu",
+    "keyakinan": "Sedang",
+    "status": "Ditolak",
+    "narasi": "Laporan awal tentang pola waktu tidak lazim. Data tidak cukup untuk mendukung klaim — hanya 1 observasi dalam periode 72 jam.",
+    "pengirim": "AD-Analis-015",
+    "pemvalidasi": "AP-Analis-003",
+    "submitAt": "2024-03-12T14:00:00Z",
+    "validasiAt": "2024-03-12T16:00:00Z",
+    "alasanTolak": "Data insufisien: hanya 1 observasi. Harap tambah minimal 3 sumber sebelum submit ulang.",
+    "lampiran": 0,
+    "riwayat": [
+      { "title": "Laporan dikirim", "time": "14:00:00", "level": "info", "desc": "Oleh AD-Analis-015" },
+      { "title": "Masuk antrian validasi", "time": "14:00:05", "level": "info", "desc": null },
+      { "title": "Ditolak", "time": "16:00:30", "level": "critical", "desc": "Oleh AP-Analis-003 — Data insufisien" }
+    ]
+  }
+]

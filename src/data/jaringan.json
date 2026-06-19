@@ -1,0 +1,87 @@
+{
+  "pusat": {
+    "id": "SAT-P-001",
+    "nama": "Badan Nasional Penanggulangan Terorisme",
+    "singkatan": "BNPT Pusat",
+    "level": "pusat",
+    "status": "online",
+    "personel": 124,
+    "syncAt": "2024-03-15T06:28:00Z",
+    "wilayah": "Nasional"
+  },
+  "wilayah": [
+    {
+      "id": "SAT-W-01",
+      "nama": "Koordinator Wilayah Sumatera",
+      "singkatan": "KORWIL-SUM",
+      "status": "online",
+      "personel": 38,
+      "syncAt": "2024-03-15T06:25:00Z",
+      "wilayah": "Sumatera",
+      "konektivitas": 98,
+      "satuan": [
+        { "id": "SAT-D-001", "nama": "Satuan Daerah Aceh",          "status": "online",   "personel": 12, "syncAt": "2024-03-15T06:20:00Z", "wilayahId": "WIL-001", "indikator": 3 },
+        { "id": "SAT-D-002", "nama": "Satuan Daerah Sumatera Utara","status": "delay",    "personel": 9,  "syncAt": "2024-03-15T05:45:00Z", "wilayahId": "WIL-002", "indikator": 1 },
+        { "id": "SAT-D-003", "nama": "Satuan Daerah Riau",          "status": "online",   "personel": 7,  "syncAt": "2024-03-15T06:22:00Z", "wilayahId": "WIL-003", "indikator": 0 }
+      ]
+    },
+    {
+      "id": "SAT-W-02",
+      "nama": "Koordinator Wilayah Jawa",
+      "singkatan": "KORWIL-JAW",
+      "status": "online",
+      "personel": 67,
+      "syncAt": "2024-03-15T06:27:00Z",
+      "wilayah": "Jawa",
+      "konektivitas": 100,
+      "satuan": [
+        { "id": "SAT-D-004", "nama": "Satuan Daerah Jawa Barat",  "status": "online",   "personel": 18, "syncAt": "2024-03-15T06:26:00Z", "wilayahId": "WIL-004", "indikator": 8 },
+        { "id": "SAT-D-005", "nama": "Satuan Daerah Jawa Tengah", "status": "online",   "personel": 15, "syncAt": "2024-03-15T06:25:00Z", "wilayahId": "WIL-005", "indikator": 4 },
+        { "id": "SAT-D-006", "nama": "Satuan Daerah Yogyakarta",  "status": "online",   "personel": 6,  "syncAt": "2024-03-15T06:10:00Z", "wilayahId": "WIL-006", "indikator": 0 },
+        { "id": "SAT-D-007", "nama": "Satuan Daerah Jawa Timur",  "status": "delay",    "personel": 16, "syncAt": "2024-03-15T05:30:00Z", "wilayahId": "WIL-007", "indikator": 5 }
+      ]
+    },
+    {
+      "id": "SAT-W-03",
+      "nama": "Koordinator Wilayah Kalimantan",
+      "singkatan": "KORWIL-KAL",
+      "status": "delay",
+      "personel": 22,
+      "syncAt": "2024-03-15T05:10:00Z",
+      "wilayah": "Kalimantan",
+      "konektivitas": 74,
+      "satuan": [
+        { "id": "SAT-D-008", "nama": "Satuan Daerah Kalimantan Timur", "status": "offline", "personel": 11, "syncAt": "2024-03-15T04:00:00Z", "wilayahId": "WIL-010", "indikator": 2 },
+        { "id": "SAT-D-009", "nama": "Satuan Daerah Kalimantan Barat", "status": "delay",   "personel": 9,  "syncAt": "2024-03-15T05:05:00Z", "wilayahId": "WIL-010", "indikator": 1 }
+      ]
+    },
+    {
+      "id": "SAT-W-04",
+      "nama": "Koordinator Wilayah Sulawesi",
+      "singkatan": "KORWIL-SUL",
+      "status": "online",
+      "personel": 31,
+      "syncAt": "2024-03-15T06:15:00Z",
+      "wilayah": "Sulawesi",
+      "konektivitas": 96,
+      "satuan": [
+        { "id": "SAT-D-010", "nama": "Satuan Daerah Sulawesi Selatan", "status": "online",   "personel": 14, "syncAt": "2024-03-15T06:12:00Z", "wilayahId": "WIL-008", "indikator": 3 },
+        { "id": "SAT-D-011", "nama": "Satuan Daerah Sulawesi Tengah",  "status": "online",   "personel": 10, "syncAt": "2024-03-15T06:08:00Z", "wilayahId": "WIL-009", "indikator": 4 }
+      ]
+    },
+    {
+      "id": "SAT-W-05",
+      "nama": "Koordinator Wilayah Timur",
+      "singkatan": "KORWIL-TIM",
+      "status": "offline",
+      "personel": 18,
+      "syncAt": "2024-03-15T03:30:00Z",
+      "wilayah": "Maluku & Papua",
+      "konektivitas": 31,
+      "satuan": [
+        { "id": "SAT-D-012", "nama": "Satuan Daerah Maluku", "status": "offline", "personel": 8,  "syncAt": "2024-03-15T03:25:00Z", "wilayahId": "WIL-012", "indikator": 2 },
+        { "id": "SAT-D-013", "nama": "Satuan Daerah Papua",  "status": "offline", "personel": 10, "syncAt": "2024-03-15T03:28:00Z", "wilayahId": "WIL-011", "indikator": 6 }
+      ]
+    }
+  ]
+}

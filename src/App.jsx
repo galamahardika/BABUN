@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import AppShell from './components/layout/AppShell'
 import Login from './pages/Login'
 import DashboardPimpinan from './pages/DashboardPimpinan'
+import JaringanIntelijen from './pages/JaringanIntelijen'
+import PengumpulanInformasi from './pages/PengumpulanInformasi'
 import PetaMonitoring from './pages/PetaMonitoring'
 import EarlyWarning from './pages/EarlyWarning'
 import PlaceholderPage from './pages/PlaceholderPage'
@@ -14,8 +16,8 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<Wrap><DashboardPimpinan /></Wrap>} />
-        <Route path="/jaringan-intelijen" element={<Wrap><PlaceholderPage title="Manajemen Jaringan Intelijen" code="A.1" /></Wrap>} />
-        <Route path="/pengumpulan-informasi" element={<Wrap><PlaceholderPage title="Pengumpulan & Validasi Informasi" code="A.2" /></Wrap>} />
+        <Route path="/jaringan-intelijen" element={<Wrap><JaringanIntelijen /></Wrap>} />
+        <Route path="/pengumpulan-informasi" element={<Wrap><PengumpulanInformasi /></Wrap>} />
         <Route path="/analisis-ancaman" element={<Wrap><PlaceholderPage title="Analisis Ancaman & Threat Assessment" code="A.3" /></Wrap>} />
         <Route path="/early-warning" element={<Wrap><EarlyWarning /></Wrap>} />
         <Route path="/peta-monitoring" element={<Wrap><PetaMonitoring /></Wrap>} />
