@@ -1,5 +1,48 @@
-import { useState } from 'react'
-import { FileText, Plus, Send, CheckCircle, Clock, Edit3, X, ChevronRight, Users } from 'lucide-react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { FileText, Plus, Send, CheckCircle, Clock, Edit3, X, ChevronRight, Users, Save, AlertCircle, RotateCcw } from 'lucide-react'
+
+const DRAFT_KEY = 'sistema_laporan_draft'
+
+function useDraftAutosave(form, enabled) {
+  const timer = useRef(null)
+  const [savedAt, setSavedAt] = useState(null)
+
+  const save = useCallback(() => {
+    try {
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ form, at: new Date().toISOString() }))
+      setSavedAt(new Date())
+    } catch {}
+  }, [form])
+
+  useEffect(() => {
+    if (!enabled) return
+    clearTimeout(timer.current)
+    timer.current = setTimeout(save, 30000) // 30s debounce
+    return () => clearTimeout(timer.current)
+  }, [form, enabled, save])
+
+  // beforeunload warning when draft has content
+  useEffect(() => {
+    if (!enabled) return
+    const handler = (e) => { e.preventDefault(); e.returnValue = '' }
+    window.addEventListener('beforeunload', handler)
+    return () => window.removeEventListener('beforeunload', handler)
+  }, [enabled])
+
+  const saveNow = () => save()
+  return { savedAt, saveNow }
+}
+
+function loadDraft() {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch { return null }
+}
+
+function clearDraft() {
+  try { localStorage.removeItem(DRAFT_KEY) } catch {}
+}
 import dataLaporan from '../data/laporanIntelijen.json'
 
 const STATUS_META = {
@@ -134,7 +177,10 @@ function DetailDrawer({ item, onClose }) {
 function BuatModal({ onClose, onSubmit }) {
   const [step, setStep] = useState(1)
   const [form, setForm] = useState({ templateId: '', judul: '', wilayah: '', periode: '', penerima: [], ringkasan: '' })
+  const [showRecovery, setShowRecovery] = useState(() => !!loadDraft())
   const tpl = TEMPLATES.find(t => t.id === form.templateId)
+  const hasContent = form.judul.trim() || form.ringkasan.trim()
+  const { savedAt, saveNow } = useDraftAutosave(form, !!hasContent)
 
   const togglePenerima = p => setForm(f => ({
     ...f, penerima: f.penerima.includes(p) ? f.penerima.filter(x => x !== p) : [...f.penerima, p]
@@ -151,10 +197,30 @@ function BuatModal({ onClose, onSubmit }) {
         <div className="flex items-center justify-between px-6 py-4 border-b border-border">
           <div>
             <h3 className="font-semibold text-text-primary">Buat Laporan Baru</h3>
-            <p className="text-xs text-text-muted mt-0.5">Langkah {step} dari 2</p>
+            <p className="text-xs text-text-muted mt-0.5">
+              Langkah {step} dari 2
+              {savedAt && <span style={{ marginLeft: 8, color: '#22C55E', fontSize: 9, fontFamily: 'JetBrains Mono, monospace' }}>✓ Tersimpan {savedAt.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>}
+            </p>
           </div>
-          <button onClick={onClose} className="p-1 rounded hover:bg-white/5 text-text-muted"><X size={18} /></button>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+            {hasContent && (
+              <button onClick={saveNow} title="Simpan draft sekarang" style={{ padding: 6, borderRadius: 6, background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.2)', color: '#22C55E', cursor: 'pointer' }}>
+                <Save size={13} />
+              </button>
+            )}
+            <button onClick={onClose} className="p-1 rounded hover:bg-white/5 text-text-muted"><X size={18} /></button>
+          </div>
         </div>
+
+        {/* Draft recovery banner */}
+        {showRecovery && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '8px 16px', background: 'rgba(245,158,11,0.08)', borderBottom: '1px solid rgba(245,158,11,0.2)' }}>
+            <RotateCcw size={13} color="#F59E0B" style={{ flexShrink: 0 }} />
+            <span style={{ flex: 1, fontSize: 11, color: '#F59E0B', fontFamily: 'Inter' }}>Draft belum disimpan ditemukan — pulihkan?</span>
+            <button onClick={() => { const d = loadDraft(); if (d?.form) setForm(d.form); setShowRecovery(false) }} style={{ fontSize: 11, color: '#F59E0B', background: 'rgba(245,158,11,0.15)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 6, padding: '3px 10px', cursor: 'pointer', fontFamily: 'Inter', fontWeight: 600 }}>Pulihkan</button>
+            <button onClick={() => { clearDraft(); setShowRecovery(false) }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#4B5563', padding: 3 }}><X size={12} /></button>
+          </div>
+        )}
 
         {step === 1 ? (
           <div className="p-6 space-y-4">
@@ -231,7 +297,7 @@ function BuatModal({ onClose, onSubmit }) {
               Lanjut →
             </button>
           ) : (
-            <button onClick={() => canSubmit && onSubmit(form)} disabled={!canSubmit}
+            <button onClick={() => { if (canSubmit) { clearDraft(); onSubmit(form) } }} disabled={!canSubmit}
               className="px-4 py-2 rounded-lg text-sm bg-accent text-white font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity flex items-center gap-2">
               <FileText size={14} /> Simpan sebagai Draft
             </button>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
-import { Brain, CheckCircle, XCircle, Clock, ChevronRight, TrendingDown, AlertTriangle, ArrowLeft } from 'lucide-react'
+import { Brain, CheckCircle, XCircle, Clock, ChevronRight, TrendingDown, AlertTriangle, ArrowLeft, Info } from 'lucide-react'
 import SeverityBadge from '../components/common/SeverityBadge'
 import { useDSS } from '../context/DSSContext'
 
@@ -21,8 +21,34 @@ const PARAM_LABELS = {
   durasiHari:        'Durasi (Hari)',
 }
 
+function MethodologyPopover({ onClose }) {
+  return (
+    <div style={{ position: 'absolute', top: '100%', right: 0, zIndex: 100, width: 280, background: '#1A2230', border: '1px solid #1F2937', borderRadius: 10, padding: '14px 16px', boxShadow: '0 8px 24px rgba(0,0,0,0.6)', marginTop: 4 }}>
+      <p style={{ fontSize: 11, fontWeight: 600, color: '#E8EDF2', margin: '0 0 10px', fontFamily: 'Space Grotesk' }}>Metodologi Skor Keyakinan</p>
+      {[
+        { range: '80–95%', label: 'Tinggi', desc: '≥3 sumber primer konsisten + validasi silang' },
+        { range: '60–79%', label: 'Sedang', desc: '1-2 sumber primer atau sumber sekunder terverifikasi' },
+        { range: '40–59%', label: 'Rendah', desc: 'Sumber tunggal atau belum divalidasi silang' },
+        { range: '<40%', label: 'Tidak Andal', desc: 'Hindari adopsi tanpa data tambahan' },
+      ].map(m => (
+        <div key={m.range} style={{ display: 'flex', gap: 10, marginBottom: 8 }}>
+          <span style={{ fontSize: 10, fontFamily: 'JetBrains Mono, monospace', color: '#3B82F6', flexShrink: 0, width: 50 }}>{m.range}</span>
+          <div>
+            <p style={{ fontSize: 10, fontWeight: 600, color: '#E8EDF2', margin: 0 }}>{m.label}</p>
+            <p style={{ fontSize: 10, color: '#7C8A99', margin: '1px 0 0', lineHeight: 1.4 }}>{m.desc}</p>
+          </div>
+        </div>
+      ))}
+      <p style={{ fontSize: 9, color: '#374151', margin: '8px 0 0', fontStyle: 'italic', fontFamily: 'Inter' }}>
+        Skor disesuaikan berdasarkan parameter skenario yang dipilih operator.
+      </p>
+    </div>
+  )
+}
+
 function ScenarioPanel({ rec, onClose, onAdopt, onReject }) {
   const [params, setParams] = useState({ ...rec.parameter })
+  const [showMethodology, setShowMethodology] = useState(false)
   const navigate = useNavigate()
 
   // Recompute projected scores based on slider deltas
@@ -68,13 +94,21 @@ function ScenarioPanel({ rec, onClose, onAdopt, onReject }) {
                 {rec.id} · {rec.wilayah}
               </p>
             </div>
-            <div style={{
-              padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 700,
-              background: confidenceAdj >= 80 ? 'rgba(34,197,94,0.15)' : 'rgba(245,158,11,0.15)',
-              color: confidenceAdj >= 80 ? '#22C55E' : '#F59E0B',
-              fontFamily: 'JetBrains Mono, monospace',
-            }}>
-              Conf: {confidenceAdj}%
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={() => setShowMethodology(v => !v)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 5,
+                  padding: '4px 10px', borderRadius: 6, fontSize: 11, fontWeight: 700,
+                  background: confidenceAdj >= 80 ? 'rgba(34,197,94,0.15)' : confidenceAdj >= 60 ? 'rgba(245,158,11,0.15)' : 'rgba(239,68,68,0.12)',
+                  color: confidenceAdj >= 80 ? '#22C55E' : confidenceAdj >= 60 ? '#F59E0B' : '#EF4444',
+                  fontFamily: 'JetBrains Mono, monospace',
+                  border: 'none', cursor: 'pointer',
+                }}>
+                Keyakinan: {confidenceAdj}%
+                <Info size={11} />
+              </button>
+              {showMethodology && <MethodologyPopover onClose={() => setShowMethodology(false)} />}
             </div>
           </div>
           <p style={{ fontSize: 12, color: '#E8EDF2', margin: 0, lineHeight: 1.4 }}>{rec.ringkasan}</p>
@@ -144,6 +178,8 @@ function ScenarioPanel({ rec, onClose, onAdopt, onReject }) {
                 const max = key === 'durasiHari' ? 30 : key === 'unitDipindah' ? 10 : 100
                 const pct = (val / max) * 100
                 const sliderColor = pct >= 70 ? '#22C55E' : pct >= 40 ? '#3B82F6' : '#F59E0B'
+                const tooHigh = pct > 90
+                const tooLow = pct < 15
                 return (
                   <div key={key}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
@@ -166,6 +202,12 @@ function ScenarioPanel({ rec, onClose, onAdopt, onReject }) {
                                opacity: 0, cursor: 'pointer', height: '100%', margin: 0,
                              }} />
                     </div>
+                    {(tooHigh || tooLow) && (
+                      <p style={{ fontSize: 9, color: '#F59E0B', margin: '4px 0 0', display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <AlertTriangle size={9} style={{ flexShrink: 0 }} />
+                        {tooHigh ? 'Nilai ekstrem tinggi — pertimbangkan dampak sumber daya' : 'Nilai terlalu rendah — mungkin tidak efektif'}
+                      </p>
+                    )}
                   </div>
                 )
               })}
@@ -340,7 +382,7 @@ export default function DecisionSupport() {
           </div>
           <div>
             <h1 style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 16, color: '#E8EDF2', margin: 0 }}>
-              Decision Support System
+              Saran Kebijakan Berbasis Data
             </h1>
             <p style={{ fontSize: 10, color: '#7C8A99', margin: '2px 0 0', fontFamily: 'JetBrains Mono, monospace' }}>
               A.11 • {rekomendasi.length} rekomendasi total

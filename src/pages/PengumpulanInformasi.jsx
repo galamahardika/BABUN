@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { Send, Paperclip, CheckCircle, XCircle, Clock, FileText, ChevronRight, AlertCircle } from 'lucide-react'
+import { Send, Paperclip, CheckCircle, XCircle, Clock, FileText, ChevronRight, AlertCircle, Trash2 } from 'lucide-react'
 import DataTable from '../components/common/DataTable'
 import SeverityBadge from '../components/common/SeverityBadge'
 import DetailDrawer from '../components/common/DetailDrawer'
@@ -194,7 +194,12 @@ const ANTRIAN_COLS = [
   { key: 'status', label: 'Status', sortable: true,
     render: (v) => <Badge status={v} /> },
   { key: 'submitAt', label: 'Dikirim', type: 'muted',
-    render: (v) => new Date(v).toLocaleString('id-ID', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) },
+    render: (v) => (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <span style={{ color: '#7C8A99', fontSize: 11 }}>{new Date(v).toLocaleString('id-ID', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' })}</span>
+        {ageBadge(v)}
+      </div>
+    ) },
   { key: 'aksi', label: 'Aksi', sortable: false,
     render: (_, row) => row.status === 'Baru' || row.status === 'Dalam Validasi'
       ? <span style={{ fontSize: 10, color: '#3B82F6' }}>Klik untuk tinjau →</span>
@@ -202,13 +207,29 @@ const ANTRIAN_COLS = [
   },
 ]
 
+function ageText(iso) {
+  const mins = Math.floor((Date.now() - new Date(iso).getTime()) / 60000)
+  if (mins < 60) return `${mins}m lalu`
+  const h = Math.floor(mins / 60)
+  if (h < 24) return `${h}j lalu`
+  return `${Math.floor(h / 24)}h lalu`
+}
+
+function ageBadge(iso) {
+  const hours = (Date.now() - new Date(iso).getTime()) / 3600000
+  const color = hours > 48 ? '#EF4444' : hours > 24 ? '#F59E0B' : '#22C55E'
+  return <span style={{ fontSize: 9, color, fontFamily: 'JetBrains Mono, monospace' }}>{ageText(iso)}</span>
+}
+
 export default function PengumpulanInformasi() {
   const [tab, setTab] = useState('input')
   const [laporan, setLaporan] = useState(laporanAwal)
-  const [selected, setSelected] = useState(null)
+  const [drawerItem, setDrawerItem] = useState(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [tolakOpen, setTolakOpen] = useState(false)
   const [tolakTarget, setTolakTarget] = useState(null)
+  const [selectedIds, setSelectedIds] = useState(new Set())
+  const [statusFilter, setStatusFilter] = useState('semua')
 
   const handleSubmit = (form) => {
     const wil = wilayah.find(w => w.id === form.wilayahId)
@@ -254,6 +275,28 @@ export default function PengumpulanInformasi() {
     ))
     setDrawerOpen(false)
   }
+
+  const handleBulkVerifikasi = () => {
+    setLaporan(prev => prev.map(l =>
+      selectedIds.has(l.id) && (l.status === 'Baru' || l.status === 'Dalam Validasi')
+        ? { ...l, status: 'Terverifikasi', pemvalidasi: 'AP-Analis-001', validasiAt: new Date().toISOString(),
+            riwayat: [...l.riwayat, { title: 'Divalidasi (bulk)', time: new Date().toLocaleTimeString('id-ID'), level: 'success', desc: 'Bulk oleh AP-Analis-001' }] }
+        : l
+    ))
+    setSelectedIds(new Set())
+  }
+
+  const handleBulkTolak = () => {
+    setLaporan(prev => prev.map(l =>
+      selectedIds.has(l.id) && (l.status === 'Baru' || l.status === 'Dalam Validasi')
+        ? { ...l, status: 'Ditolak', alasanTolak: 'Ditolak via aksi massal.',
+            riwayat: [...l.riwayat, { title: 'Ditolak (bulk)', time: new Date().toLocaleTimeString('id-ID'), level: 'critical', desc: 'Bulk oleh AP-Analis-001' }] }
+        : l
+    ))
+    setSelectedIds(new Set())
+  }
+
+  const filtered = statusFilter === 'semua' ? laporan : laporan.filter(l => l.status === statusFilter)
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -306,17 +349,19 @@ export default function PengumpulanInformasi() {
 
       {/* Tab: Antrian */}
       {tab === 'antrian' && (
-        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px' }}>
-          {/* Summary pills */}
-          <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap' }}>
-            {['Baru','Dalam Validasi','Terverifikasi','Ditolak'].map(s => {
-              const n = laporan.filter(l => l.status === s).length
+        <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px', position: 'relative' }}>
+          {/* Quick filter chips */}
+          <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap', alignItems: 'center' }}>
+            {['semua', 'Baru','Dalam Validasi','Terverifikasi','Ditolak'].map(s => {
+              const n = s === 'semua' ? laporan.length : laporan.filter(l => l.status === s).length
               const level = STATUS_LEVEL[s]
-              const c = { success:'#22C55E', moderate:'#FACC15', info:'#3B82F6', critical:'#EF4444' }[level] || '#7C8A99'
+              const c = s === 'semua' ? '#7C8A99' : { success:'#22C55E', moderate:'#FACC15', info:'#3B82F6', critical:'#EF4444' }[level] || '#7C8A99'
+              const active = statusFilter === s
               return (
-                <span key={s} style={{ padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: c + '15', color: c, border: `1px solid ${c}33` }}>
-                  {n} {s}
-                </span>
+                <button key={s} onClick={() => { setStatusFilter(s); setSelectedIds(new Set()) }}
+                  style={{ padding: '4px 12px', borderRadius: 20, fontSize: 11, fontWeight: 600, background: active ? c + '25' : 'transparent', color: c, border: `1px solid ${active ? c + '66' : c + '22'}`, cursor: 'pointer', transition: 'all 150ms' }}>
+                  {n} {s === 'semua' ? 'Semua' : s}
+                </button>
               )
             })}
           </div>
@@ -324,33 +369,57 @@ export default function PengumpulanInformasi() {
           <div style={{ background: '#131922', border: '1px solid #1F2937', borderRadius: 12, overflow: 'hidden' }}>
             <DataTable
               columns={ANTRIAN_COLS}
-              data={laporan}
-              onRowClick={row => { setSelected(row); setDrawerOpen(true) }}
+              data={filtered}
+              onRowClick={row => { setDrawerItem(row); setDrawerOpen(true) }}
+              selectable
+              selectedIds={selectedIds}
+              onSelectionChange={setSelectedIds}
+              pagination
+              pageSize={15}
             />
           </div>
+
+          {/* Floating bulk action bar */}
+          {selectedIds.size > 0 && (
+            <div style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 500, display: 'flex', alignItems: 'center', gap: 12, background: '#1A2230', border: '1px solid #3B82F688', borderRadius: 12, padding: '10px 20px', boxShadow: '0 8px 32px rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)' }}>
+              <span style={{ fontSize: 12, color: '#E8EDF2', fontFamily: 'Inter', fontWeight: 500 }}>
+                {selectedIds.size} dipilih
+              </span>
+              <div style={{ width: 1, height: 16, background: '#1F2937' }} />
+              <button onClick={handleBulkVerifikasi} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 8, background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.3)', color: '#22C55E', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter' }}>
+                <CheckCircle size={13} /> Verifikasi Semua
+              </button>
+              <button onClick={handleBulkTolak} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '6px 14px', borderRadius: 8, background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)', color: '#EF4444', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'Inter' }}>
+                <XCircle size={13} /> Tolak Semua
+              </button>
+              <button onClick={() => setSelectedIds(new Set())} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#4B5563', padding: 4 }}>
+                <Trash2 size={13} />
+              </button>
+            </div>
+          )}
         </div>
       )}
 
       {/* Detail drawer */}
-      <DetailDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} title={selected ? `Detail — ${selected.id}` : ''}>
-        {selected && (
+      <DetailDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} title={drawerItem ? `Detail — ${drawerItem.id}` : ''}>
+        {drawerItem && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
             <div>
-              <Badge status={selected.status} />
+              <Badge status={drawerItem.status} />
               <h3 style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 14, color: '#E8EDF2', margin: '8px 0 0', lineHeight: 1.4 }}>
-                {selected.judul}
+                {drawerItem.judul}
               </h3>
             </div>
 
             {/* Meta grid */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
               {[
-                { label: 'Wilayah', value: selected.wilayah },
-                { label: 'Kategori', value: selected.kategori },
-                { label: 'Keyakinan', value: selected.keyakinan },
-                { label: 'Pengirim', value: selected.pengirim, mono: true },
-                { label: 'Dikirim', value: new Date(selected.submitAt).toLocaleString('id-ID'), mono: true },
-                { label: 'Lampiran', value: `${selected.lampiran} file` },
+                { label: 'Wilayah', value: drawerItem.wilayah },
+                { label: 'Kategori', value: drawerItem.kategori },
+                { label: 'Keyakinan', value: drawerItem.keyakinan },
+                { label: 'Pengirim', value: drawerItem.pengirim, mono: true },
+                { label: 'Dikirim', value: new Date(drawerItem.submitAt).toLocaleString('id-ID'), mono: true },
+                { label: 'Lampiran', value: `${drawerItem.lampiran} file` },
               ].map(m => (
                 <div key={m.label} style={{ background: '#0A0E13', borderRadius: 8, padding: '9px 11px', border: '1px solid #1F2937' }}>
                   <p style={{ fontSize: 9, color: '#7C8A99', margin: '0 0 2px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{m.label}</p>
@@ -363,34 +432,34 @@ export default function PengumpulanInformasi() {
             <div>
               <p style={{ fontSize: 10, color: '#7C8A99', margin: '0 0 8px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Narasi</p>
               <p style={{ fontSize: 12, color: '#E8EDF2', lineHeight: 1.6, margin: 0, background: '#0A0E13', padding: '12px', borderRadius: 8, border: '1px solid #1F2937' }}>
-                {selected.narasi}
+                {drawerItem.narasi}
               </p>
             </div>
 
             {/* Alasan tolak */}
-            {selected.status === 'Ditolak' && selected.alasanTolak && (
+            {drawerItem.status === 'Ditolak' && drawerItem.alasanTolak && (
               <div style={{ background: 'rgba(239,68,68,0.06)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, padding: '12px' }}>
                 <p style={{ fontSize: 10, color: '#EF4444', margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>Alasan Penolakan</p>
-                <p style={{ fontSize: 12, color: '#E8EDF2', margin: 0, lineHeight: 1.5 }}>{selected.alasanTolak}</p>
+                <p style={{ fontSize: 12, color: '#E8EDF2', margin: 0, lineHeight: 1.5 }}>{drawerItem.alasanTolak}</p>
               </div>
             )}
 
             {/* Riwayat */}
             <div>
               <p style={{ fontSize: 10, color: '#7C8A99', margin: '0 0 12px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Riwayat Status</p>
-              <Stepper steps={selected.riwayat} />
+              <Stepper steps={drawerItem.riwayat} />
             </div>
 
             {/* Actions */}
-            {(selected.status === 'Baru' || selected.status === 'Dalam Validasi') && (
+            {(drawerItem.status === 'Baru' || drawerItem.status === 'Dalam Validasi') && (
               <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
                 <button
-                  onClick={() => { setTolakTarget(selected.id); setTolakOpen(true) }}
+                  onClick={() => { setTolakTarget(drawerItem.id); setTolakOpen(true) }}
                   style={{ flex: 1, padding: '10px', borderRadius: 8, border: '1px solid rgba(239,68,68,0.3)', background: 'rgba(239,68,68,0.1)', color: '#EF4444', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
                   <XCircle size={14} /> Tolak
                 </button>
                 <button
-                  onClick={() => handleVerifikasi(selected.id)}
+                  onClick={() => handleVerifikasi(drawerItem.id)}
                   style={{ flex: 2, padding: '10px', borderRadius: 8, border: 'none', background: 'linear-gradient(135deg,#22C55E,#16A34A)', color: '#fff', fontSize: 12, fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, boxShadow: '0 0 12px rgba(34,197,94,0.3)' }}>
                   <CheckCircle size={14} /> Verifikasi Laporan
                 </button>

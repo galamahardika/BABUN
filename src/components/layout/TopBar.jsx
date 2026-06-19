@@ -1,31 +1,35 @@
-import { Bell, Search, ChevronDown } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
+import { Bell, ChevronDown, Lock, LogOut, Search } from 'lucide-react'
+import { useAuth } from '../../context/AuthContext'
+import { useNotifications } from '../../context/NotificationContext'
+import NotificationCenter from './NotificationCenter'
 
-const ALERTS_MOCK = [
-  { id: 1, text: 'Peringatan Kritis: Wilayah Simulasi 4', time: '2 mnt lalu', level: 'critical' },
-  { id: 2, text: 'Laporan baru menunggu validasi', time: '8 mnt lalu', level: 'moderate' },
-  { id: 3, text: 'Sinkronisasi Satuan W-07 gagal', time: '15 mnt lalu', level: 'high' },
-]
+export default function TopBar({ onOpenPalette }) {
+  const { user, lock, logout } = useAuth()
+  const { unread } = useNotifications()
 
-export default function TopBar() {
   const [showNotif, setShowNotif] = useState(false)
   const [showUser, setShowUser] = useState(false)
 
-  const levelColor = { critical: '#EF4444', high: '#F59E0B', moderate: '#FACC15' }
+  const closeAll = useCallback(() => { setShowNotif(false); setShowUser(false) }, [])
 
   return (
-    <div className="flex items-center gap-3 px-4 py-2 border-b"
-         style={{ background: '#131922', borderColor: '#1F2937', height: 48 }}>
-      {/* Search */}
-      <div className="flex items-center gap-2 flex-1 max-w-sm rounded-lg px-3 py-1.5"
-           style={{ background: '#1A2230', border: '1px solid #1F2937' }}>
+    <div className="flex items-center gap-3 px-4 border-b"
+         style={{ background: '#131922', borderColor: '#1F2937', height: 48, position: 'relative' }}>
+
+      {/* Search / Command Palette trigger */}
+      <button
+        onClick={onOpenPalette}
+        className="flex items-center gap-2 flex-1 max-w-sm rounded-lg px-3 py-1.5 text-left"
+        style={{ background: '#1A2230', border: '1px solid #1F2937', cursor: 'text' }}>
         <Search size={14} color="#7C8A99" />
-        <input
-          placeholder="Cari entitas, laporan, wilayah…"
-          className="bg-transparent text-sm outline-none flex-1"
-          style={{ color: '#E8EDF2', fontFamily: 'Inter' }}
-        />
-      </div>
+        <span className="text-sm flex-1" style={{ color: '#4B5563', fontFamily: 'Inter' }}>
+          Cari modul, laporan, wilayah…
+        </span>
+        <kbd style={{ fontSize: 9, color: '#374151', fontFamily: 'JetBrains Mono, monospace', background: 'rgba(255,255,255,0.04)', border: '1px solid #1F2937', borderRadius: 3, padding: '1px 5px' }}>
+          Ctrl+K
+        </kbd>
+      </button>
 
       <div className="flex-1" />
 
@@ -33,56 +37,64 @@ export default function TopBar() {
       <div className="relative">
         <button
           onClick={() => { setShowNotif(v => !v); setShowUser(false) }}
-          className="relative p-2 rounded-lg hover:opacity-80 transition-opacity"
-          style={{ background: '#1A2230' }}>
+          className="relative p-2 rounded-lg transition-opacity"
+          style={{ background: '#1A2230' }}
+          onMouseEnter={e => e.currentTarget.style.opacity = '0.8'}
+          onMouseLeave={e => e.currentTarget.style.opacity = '1'}>
           <Bell size={16} color="#7C8A99" />
-          <span className="absolute top-1 right-1 w-2 h-2 rounded-full"
-                style={{ background: '#EF4444' }} />
+          {unread.length > 0 && (
+            <span className="absolute top-1 right-1 flex items-center justify-center"
+                  style={{ minWidth: 14, height: 14, borderRadius: 7, background: '#EF4444', fontSize: 8, color: '#fff', fontWeight: 700, fontFamily: 'Inter', padding: '0 2px' }}>
+              {unread.length > 9 ? '9+' : unread.length}
+            </span>
+          )}
         </button>
-        {showNotif && (
-          <div className="absolute right-0 top-10 w-72 rounded-xl shadow-2xl z-50 border"
-               style={{ background: '#1A2230', borderColor: '#1F2937' }}>
-            <div className="px-4 py-2 border-b text-xs font-semibold"
-                 style={{ borderColor: '#1F2937', color: '#7C8A99' }}>
-              NOTIFIKASI TERBARU
-            </div>
-            {ALERTS_MOCK.map(a => (
-              <div key={a.id} className="flex items-start gap-3 px-4 py-3 border-b hover:opacity-80 cursor-pointer"
-                   style={{ borderColor: '#1F2937' }}>
-                <div className="w-2 h-2 rounded-full mt-1.5 shrink-0"
-                     style={{ background: levelColor[a.level] }} />
-                <div>
-                  <p className="text-xs" style={{ color: '#E8EDF2' }}>{a.text}</p>
-                  <p className="text-xs mt-0.5" style={{ color: '#7C8A99' }}>{a.time}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        <NotificationCenter open={showNotif} onClose={() => setShowNotif(false)} />
       </div>
 
-      {/* User avatar */}
+      {/* User menu */}
       <div className="relative">
         <button
           onClick={() => { setShowUser(v => !v); setShowNotif(false) }}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:opacity-80"
-          style={{ background: '#1A2230' }}>
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg"
+          style={{ background: '#1A2230' }}
+          onMouseEnter={e => e.currentTarget.style.opacity = '0.8'}
+          onMouseLeave={e => e.currentTarget.style.opacity = '1'}>
           <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold"
-               style={{ background: '#3B82F6', color: '#fff', fontFamily: 'Space Grotesk' }}>
-            AP
+               style={{ background: user?.avatarColor || '#3B82F6', color: '#fff', fontFamily: 'Space Grotesk', fontSize: 9 }}>
+            {user?.avatar || '??'}
           </div>
-          <span className="text-xs" style={{ color: '#E8EDF2' }}>Analis Pusat</span>
+          <span className="text-xs" style={{ color: '#E8EDF2', fontFamily: 'Inter' }}>
+            {user?.nama || 'Pengguna'}
+          </span>
           <ChevronDown size={12} color="#7C8A99" />
         </button>
+
         {showUser && (
-          <div className="absolute right-0 top-10 w-44 rounded-xl shadow-2xl z-50 border py-1"
-               style={{ background: '#1A2230', borderColor: '#1F2937' }}>
-            {['Profil Saya', 'Pengaturan', 'Keluar'].map(item => (
-              <button key={item} className="w-full text-left px-4 py-2 text-xs hover:opacity-70"
-                      style={{ color: '#E8EDF2' }}>
-                {item}
-              </button>
-            ))}
+          <div className="absolute right-0 top-10 rounded-xl shadow-2xl z-50 border py-1"
+               style={{ background: '#1A2230', borderColor: '#1F2937', width: 200, minWidth: 180 }}>
+            {/* User info */}
+            <div style={{ padding: '10px 14px', borderBottom: '1px solid #1F2937' }}>
+              <p style={{ fontSize: 12, fontWeight: 600, color: '#E8EDF2', margin: 0, fontFamily: 'Space Grotesk' }}>{user?.nama}</p>
+              <p style={{ fontSize: 10, color: '#7C8A99', margin: '2px 0 0', fontFamily: 'Inter' }}>{user?.jabatan}</p>
+              <p style={{ fontSize: 9, color: '#374151', margin: '2px 0 0', fontFamily: 'JetBrains Mono, monospace' }}>{user?.id}</p>
+            </div>
+
+            <button onClick={() => { lock(); closeAll() }}
+              className="w-full text-left flex items-center gap-2 px-4 py-2 text-xs"
+              style={{ color: '#7C8A99', fontFamily: 'Inter', background: 'none', border: 'none', cursor: 'pointer' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'none'}>
+              <Lock size={12} /> Kunci Sesi
+            </button>
+
+            <button onClick={() => { logout(); closeAll() }}
+              className="w-full text-left flex items-center gap-2 px-4 py-2 text-xs"
+              style={{ color: '#EF4444', fontFamily: 'Inter', background: 'none', border: 'none', cursor: 'pointer' }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(239,68,68,0.06)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'none'}>
+              <LogOut size={12} /> Keluar
+            </button>
           </div>
         )}
       </div>

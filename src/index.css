@@ -91,8 +91,15 @@ body {
 /* Suppress focus ring for mouse clicks */
 :focus:not(:focus-visible) { outline: none; }
 
+/* Skeleton shimmer */
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 /* Drawer slide-in — also suppress for reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   .drawer-enter { animation: none; }
   .nav-rail { transition: none; }
+  [style*="skeleton-shimmer"] { animation: none; }
 }
