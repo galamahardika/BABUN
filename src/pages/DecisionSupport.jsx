@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, ReferenceLine } from 'recharts'
-import { Brain, CheckCircle, XCircle, Clock, ChevronRight, TrendingDown, AlertTriangle, ArrowLeft, Info } from 'lucide-react'
+import { Brain, CheckCircle, XCircle, Clock, ChevronRight, TrendingDown, AlertTriangle, ArrowLeft, Info, MessageSquare } from 'lucide-react'
 import SeverityBadge from '../components/common/SeverityBadge'
 import { useDSS } from '../context/DSSContext'
 
@@ -42,6 +42,92 @@ function MethodologyPopover({ onClose }) {
       <p style={{ fontSize: 9, color: '#374151', margin: '8px 0 0', fontStyle: 'italic', fontFamily: 'Inter' }}>
         Skor disesuaikan berdasarkan parameter skenario yang dipilih operator.
       </p>
+    </div>
+  )
+}
+
+function RejectModal({ rec, onConfirm, onCancel }) {
+  const [alasan, setAlasan] = useState('')
+  const valid = alasan.trim().length >= 10
+
+  return (
+    <div style={{
+      position: 'fixed', inset: 0, zIndex: 200,
+      background: 'rgba(10,14,19,0.85)',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+    }} onClick={onCancel}>
+      <div style={{
+        width: 440, background: '#131922',
+        border: '1px solid rgba(239,68,68,0.3)',
+        borderRadius: 14, overflow: 'hidden',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.7)',
+      }} onClick={e => e.stopPropagation()}>
+        {/* Header */}
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid #1F2937', display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(239,68,68,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <XCircle size={14} color="#EF4444" />
+          </div>
+          <div style={{ flex: 1 }}>
+            <p style={{ fontFamily: 'Space Grotesk', fontWeight: 700, fontSize: 14, color: '#E8EDF2', margin: 0 }}>Tolak Rekomendasi</p>
+            <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#7C8A99', margin: '2px 0 0' }}>{rec.id}</p>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div style={{ padding: '16px 20px' }}>
+          <p style={{ fontSize: 12, color: '#E8EDF2', margin: '0 0 6px', lineHeight: 1.4 }}>
+            {rec.ringkasan}
+          </p>
+          <p style={{ fontSize: 10, color: '#7C8A99', margin: '0 0 14px' }}>
+            Analis: <span style={{ fontFamily: 'JetBrains Mono, monospace', color: '#E8EDF2' }}>{rec.analis}</span>
+          </p>
+
+          <label style={{ display: 'block', fontSize: 10, color: '#7C8A99', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600, marginBottom: 8 }}>
+            Alasan Penolakan <span style={{ color: '#EF4444' }}>*</span>
+          </label>
+          <textarea
+            autoFocus
+            value={alasan}
+            onChange={e => setAlasan(e.target.value)}
+            placeholder="Jelaskan alasan penolakan agar analis dapat merevisi rekomendasi…"
+            rows={4}
+            style={{
+              width: '100%', background: '#1A2230',
+              border: `1px solid ${valid ? 'rgba(239,68,68,0.4)' : '#1F2937'}`,
+              borderRadius: 8, padding: '10px 12px',
+              color: '#E8EDF2', fontSize: 12, fontFamily: 'Inter',
+              outline: 'none', resize: 'none', lineHeight: 1.5,
+              boxSizing: 'border-box',
+            }}
+            onFocus={e => e.target.style.borderColor = 'rgba(239,68,68,0.5)'}
+            onBlur={e => e.target.style.borderColor = valid ? 'rgba(239,68,68,0.4)' : '#1F2937'}
+          />
+          {alasan.length > 0 && !valid && (
+            <p style={{ fontSize: 10, color: '#F59E0B', margin: '4px 0 0' }}>Minimal 10 karakter</p>
+          )}
+          <p style={{ fontSize: 10, color: '#7C8A99', margin: '6px 0 0', fontStyle: 'italic' }}>
+            Alasan ini akan dilihat oleh analis sebagai catatan revisi di modul Analisis Ancaman.
+          </p>
+        </div>
+
+        {/* Footer */}
+        <div style={{ padding: '12px 20px', borderTop: '1px solid #1F2937', display: 'flex', gap: 10 }}>
+          <button onClick={onCancel}
+                  style={{ flex: 1, padding: '9px', borderRadius: 8, border: '1px solid #1F2937', background: 'transparent', color: '#7C8A99', fontSize: 12, cursor: 'pointer' }}>
+            Batal
+          </button>
+          <button onClick={() => valid && onConfirm(rec.id, alasan.trim())} disabled={!valid}
+                  style={{
+                    flex: 2, padding: '9px', borderRadius: 8, border: 'none',
+                    background: valid ? 'rgba(239,68,68,0.9)' : '#1F2937',
+                    color: valid ? '#fff' : '#7C8A99',
+                    fontSize: 12, fontWeight: 600, cursor: valid ? 'pointer' : 'not-allowed',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                  }}>
+            <XCircle size={13} /> Tolak & Kirim Catatan
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
@@ -347,6 +433,7 @@ export default function DecisionSupport() {
   const { rekomendasi, updateStatus } = useDSS()
   const [filterStatus, setFilterStatus] = useState('Semua')
   const [scenarioRec, setScenarioRec] = useState(null)
+  const [rejectTarget, setRejectTarget] = useState(null)
 
   const filtered = filterStatus === 'Semua'
     ? rekomendasi
@@ -364,7 +451,13 @@ export default function DecisionSupport() {
   }
 
   const handleReject = (id) => {
-    updateStatus(id, 'Ditolak', 'Tidak sesuai prioritas operasional saat ini.')
+    const rec = rekomendasi.find(r => r.id === id)
+    setRejectTarget(rec)
+  }
+
+  const handleConfirmReject = (id, alasan) => {
+    updateStatus(id, 'Ditolak', alasan)
+    setRejectTarget(null)
     setScenarioRec(null)
   }
 
@@ -461,6 +554,15 @@ export default function DecisionSupport() {
           onClose={() => setScenarioRec(null)}
           onAdopt={handleAdopt}
           onReject={handleReject}
+        />
+      )}
+
+      {/* Reject modal */}
+      {rejectTarget && (
+        <RejectModal
+          rec={rejectTarget}
+          onConfirm={handleConfirmReject}
+          onCancel={() => setRejectTarget(null)}
         />
       )}
     </div>

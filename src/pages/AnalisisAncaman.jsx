@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts'
-import { Send, FileText, Link, TrendingUp, AlertTriangle, ChevronRight, CheckCircle } from 'lucide-react'
+import { Send, FileText, Link, TrendingUp, AlertTriangle, ChevronRight, CheckCircle, MessageSquare, RotateCcw } from 'lucide-react'
 import SeverityBadge from '../components/common/SeverityBadge'
 import { useDSS } from '../context/DSSContext'
 import analisisData from '../data/analisis.json'
@@ -75,7 +75,8 @@ function CustomTooltip({ active, payload, label }) {
 
 export default function AnalisisAncaman() {
   const navigate = useNavigate()
-  const { tambahRekomendasi } = useDSS()
+  const { tambahRekomendasi, rekomendasi } = useDSS()
+  const menungguRevisi = rekomendasi.filter(r => r.status === 'Ditolak' && r.alasanTolak)
   const [selected, setSelected] = useState(analisisData.kasusAktif[0])
   const [narasiRek, setNarasiRek] = useState('')
   const [kirimSuccess, setKirimSuccess] = useState(false)
@@ -349,6 +350,55 @@ export default function AnalisisAncaman() {
                       }}>
                 <FileText size={12} /> Lihat Antrian Validasi
               </button>
+            </div>
+
+            {/* Menunggu Revisi — feedback loop dari A.11 */}
+            <div style={{ borderTop: '1px solid #1F2937', paddingTop: 14, marginTop: 14 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
+                <RotateCcw size={11} color="#F59E0B" />
+                <p style={{ fontSize: 10, color: '#F59E0B', margin: 0, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  Menunggu Revisi
+                </p>
+                {menungguRevisi.length > 0 && (
+                  <span style={{ marginLeft: 'auto', minWidth: 18, height: 18, borderRadius: 9, background: 'rgba(245,158,11,0.2)', color: '#F59E0B', fontSize: 9, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 5px' }}>
+                    {menungguRevisi.length}
+                  </span>
+                )}
+              </div>
+              {menungguRevisi.length === 0 ? (
+                <p style={{ fontSize: 11, color: '#7C8A99', textAlign: 'center', padding: '10px 0', fontStyle: 'italic' }}>
+                  Tidak ada rekomendasi yang perlu direvisi
+                </p>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {menungguRevisi.map(r => (
+                    <div key={r.id} style={{
+                      padding: '10px 11px', borderRadius: 8,
+                      border: '1px solid rgba(245,158,11,0.25)',
+                      background: 'rgba(245,158,11,0.05)',
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
+                        <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#F59E0B' }}>{r.id}</span>
+                        <span style={{ fontSize: 9, color: '#7C8A99' }}>{new Date(r.tanggal).toLocaleDateString('id-ID')}</span>
+                      </div>
+                      <p style={{ fontSize: 11, color: '#E8EDF2', margin: '0 0 7px', lineHeight: 1.35 }}>{r.ringkasan}</p>
+                      <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 6, padding: '6px 8px', display: 'flex', gap: 6 }}>
+                        <MessageSquare size={10} color="#EF4444" style={{ flexShrink: 0, marginTop: 1 }} />
+                        <p style={{ fontSize: 10, color: '#EF4444', margin: 0, lineHeight: 1.4 }}>{r.alasanTolak}</p>
+                      </div>
+                      <button onClick={() => setNarasiRek(r.ringkasan)}
+                              style={{
+                                marginTop: 7, width: '100%', padding: '5px', borderRadius: 6,
+                                border: '1px solid rgba(245,158,11,0.3)', background: 'transparent',
+                                color: '#F59E0B', fontSize: 10, cursor: 'pointer',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
+                              }}>
+                        <RotateCcw size={10} /> Buka untuk Revisi
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Kategori pola */}

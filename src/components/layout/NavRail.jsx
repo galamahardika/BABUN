@@ -6,6 +6,8 @@ import {
   Users, Shield, ChevronDown, ChevronRight, PanelLeftClose, PanelLeftOpen
 } from 'lucide-react'
 import { useNotifications } from '../../context/NotificationContext'
+import { useAuth } from '../../context/AuthContext'
+import { canAccess } from '../../data/schema'
 
 const GROUPS = [
   {
@@ -149,8 +151,10 @@ function Group({ group, expanded, badges }) {
 export default function NavRail() {
   const [collapsed, setCollapsed] = useState(readCollapsed)
   const { unread } = useNotifications()
+  const { user } = useAuth()
 
   const expanded = !collapsed
+  const role = user?.role || 'operator'
 
   const toggle = () => {
     setCollapsed(v => {
@@ -206,9 +210,13 @@ export default function NavRail() {
         </button>
       </div>
 
-      {/* Nav groups */}
+      {/* Nav groups — filter items by RBAC */}
       <div className="flex-1 py-2">
-        {GROUPS.map(g => <Group key={g.label} group={g} expanded={expanded} badges={badges} />)}
+        {GROUPS.map(g => {
+          const visibleItems = g.items.filter(item => canAccess(role, item.path))
+          if (visibleItems.length === 0) return null
+          return <Group key={g.label} group={{ ...g, items: visibleItems }} expanded={expanded} badges={badges} />
+        })}
       </div>
 
       {/* Inactive systems */}
