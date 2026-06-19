@@ -1,10 +1,17 @@
-const CONFIG = {
+const _BASE = {
   critical: { bg: 'rgba(239,68,68,0.15)',  border: '#EF4444', color: '#EF4444',  label: 'Kritis' },
   high:     { bg: 'rgba(245,158,11,0.15)', border: '#F59E0B', color: '#F59E0B',  label: 'Tinggi' },
   moderate: { bg: 'rgba(250,204,21,0.12)', border: '#FACC15', color: '#FACC15',  label: 'Sedang' },
   low:      { bg: 'rgba(34,197,94,0.12)',  border: '#22C55E', color: '#22C55E',  label: 'Rendah' },
   success:  { bg: 'rgba(34,197,94,0.12)',  border: '#22C55E', color: '#22C55E',  label: 'Terverifikasi' },
   info:     { bg: 'rgba(59,130,246,0.12)', border: '#3B82F6', color: '#3B82F6',  label: 'Info' },
+}
+
+const CONFIG = {
+  ..._BASE,
+  warning: _BASE.high,
+  medium:  _BASE.moderate,
+  danger:  _BASE.critical,
 }
 
 export default function SeverityBadge({ level = 'info', label, size = 'sm' }) {

@@ -2,22 +2,13 @@ import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Bell, X, Check, ChevronRight, AlertTriangle, Info } from 'lucide-react'
 import { useNotifications } from '../../context/NotificationContext'
+import { formatRelative } from '../../utils/time'
 
 const LEVEL_CONFIG = {
   critical: { color: '#EF4444', bg: 'rgba(239,68,68,0.1)',  icon: AlertTriangle },
   high:     { color: '#F59E0B', bg: 'rgba(245,158,11,0.1)', icon: AlertTriangle },
   moderate: { color: '#FACC15', bg: 'rgba(250,204,21,0.1)', icon: AlertTriangle },
   info:     { color: '#3B82F6', bg: 'rgba(59,130,246,0.1)', icon: Info },
-}
-
-function formatTime(iso) {
-  const diff = Date.now() - new Date(iso).getTime()
-  const m = Math.floor(diff / 60000)
-  if (m < 1) return 'Baru saja'
-  if (m < 60) return `${m} mnt lalu`
-  const h = Math.floor(m / 60)
-  if (h < 24) return `${h} jam lalu`
-  return `${Math.floor(h / 24)} hari lalu`
 }
 
 export default function NotificationCenter({ open, onClose }) {
@@ -100,7 +91,7 @@ export default function NotificationCenter({ open, onClose }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
                   <span style={{ fontSize: 9, color: '#374151', fontFamily: 'JetBrains Mono, monospace' }}>{a.id}</span>
                   <span style={{ fontSize: 9, color: '#374151' }}>•</span>
-                  <span style={{ fontSize: 10, color: '#4B5563', fontFamily: 'Inter' }}>{formatTime(a.time)}</span>
+                  <span style={{ fontSize: 10, color: '#4B5563', fontFamily: 'Inter' }}>{formatRelative(a.waktu ?? a.time)}</span>
                 </div>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center', flexShrink: 0 }}>

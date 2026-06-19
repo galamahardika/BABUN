@@ -5,6 +5,7 @@ import {
   FileInput, BarChart3, Brain, Network, FileText, Shield,
   Activity, Wifi, Database, Clock, Bell,
 } from 'lucide-react'
+import { formatRelative } from '../utils/time'
 import SeverityBadge from '../components/common/SeverityBadge'
 import IndonesiaMap from '../components/map/IndonesiaMap'
 import { useNotifications } from '../context/NotificationContext'
@@ -60,14 +61,6 @@ function AlertFeed({ onViewAll }) {
     info:     { color: '#3B82F6', bg: 'rgba(59,130,246,0.06)', border: 'rgba(59,130,246,0.15)' },
   }
 
-  function fmt(iso) {
-    const diff = (Date.now() - new Date(iso).getTime()) / 1000
-    if (diff < 60) return `${Math.floor(diff)}d`
-    if (diff < 3600) return `${Math.floor(diff/60)}m`
-    if (diff < 86400) return `${Math.floor(diff/3600)}j`
-    return `${Math.floor(diff/86400)}hr`
-  }
-
   return (
     <div style={{ background: '#131922', border: '1px solid #1F2937', borderRadius: 12, overflow: 'hidden', height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', borderBottom: '1px solid #1F2937', flexShrink: 0 }}>
@@ -105,7 +98,7 @@ function AlertFeed({ onViewAll }) {
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <span style={{ fontSize: 9, color: cfg.color, fontWeight: 700, textTransform: 'uppercase' }}>{a.level}</span>
                     <span style={{ fontSize: 9, color: '#374151' }}>•</span>
-                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#7C8A99' }}>{fmt(a.waktu)}</span>
+                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 9, color: '#7C8A99' }}>{formatRelative(a.waktu)}</span>
                   </div>
                 </div>
               </div>
