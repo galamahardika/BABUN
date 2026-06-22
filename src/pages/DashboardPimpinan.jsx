@@ -1,9 +1,8 @@
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
-  AlertTriangle, Radio, Users, ChevronRight, TrendingUp, Map,
-  FileInput, BarChart3, Brain, Network, FileText, Shield,
-  Activity, Wifi, Database, Clock, Bell,
+  AlertTriangle, Users, ChevronRight, TrendingUp, Map,
+  FileInput, Wifi, Bell,
 } from 'lucide-react'
 import { formatRelative } from '../utils/time'
 import SeverityBadge from '../components/common/SeverityBadge'
@@ -110,16 +109,6 @@ function AlertFeed({ onViewAll }) {
   )
 }
 
-const QUICK_MODULES = [
-  { label: 'Pengumpulan', sub: 'A.2', path: '/pengumpulan-informasi', icon: FileInput, color: '#3B82F6' },
-  { label: 'Analisis', sub: 'A.3', path: '/analisis-ancaman', icon: BarChart3, color: '#F59E0B' },
-  { label: 'Early Warning', sub: 'A.4', path: '/early-warning', icon: AlertTriangle, color: '#EF4444' },
-  { label: 'Peta Monitor', sub: 'A.5', path: '/peta-monitoring', icon: Map, color: '#22D3D8' },
-  { label: 'Decision Support', sub: 'A.11', path: '/decision-support', icon: Brain, color: '#A78BFA' },
-  { label: 'Laporan Intel', sub: 'A.9', path: '/laporan-intelijen', icon: FileText, color: '#22C55E' },
-  { label: 'Jaringan Intel', sub: 'A.1', path: '/jaringan-intelijen', icon: Network, color: '#60A5FA' },
-  { label: 'Audit & Patuh', sub: 'A.13', path: '/admin/audit-keamanan', icon: Shield, color: '#FB923C' },
-]
 
 export default function DashboardPimpinan() {
   const nav = useNavigate()
@@ -250,38 +239,12 @@ export default function DashboardPimpinan() {
         </div>
       </div>
 
-      {/* ── ZONE 3: Quick Access + DSS + Laporan ── */}
+      {/* ── ZONE 3: DSS + Laporan ── */}
       <div style={{
         flexShrink: 0, borderTop: '1px solid #1F2937',
         background: '#0A0E13', padding: '14px 20px',
-        display: 'grid', gridTemplateColumns: '1fr 280px 280px', gap: 16,
+        display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16,
       }}>
-        {/* Quick access grid */}
-        <div>
-          <p style={{ fontSize: 9, color: '#374151', margin: '0 0 10px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>Akses Cepat Modul</p>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
-            {QUICK_MODULES.map(m => {
-              const Icon = m.icon
-              return (
-                <button key={m.path} onClick={() => nav(m.path)}
-                        style={{
-                          padding: '10px 8px', borderRadius: 9,
-                          border: `1px solid ${m.color}22`,
-                          background: `${m.color}09`, cursor: 'pointer',
-                          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
-                          transition: 'all 120ms',
-                        }}
-                        onMouseEnter={e => { e.currentTarget.style.background = `${m.color}18`; e.currentTarget.style.borderColor = `${m.color}44` }}
-                        onMouseLeave={e => { e.currentTarget.style.background = `${m.color}09`; e.currentTarget.style.borderColor = `${m.color}22` }}>
-                  <Icon size={16} color={m.color} />
-                  <span style={{ fontSize: 9, color: '#E8EDF2', textAlign: 'center', lineHeight: 1.3, fontWeight: 500 }}>{m.label}</span>
-                  <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: 8, color: '#374151' }}>{m.sub}</span>
-                </button>
-              )
-            })}
-          </div>
-        </div>
-
         {/* DSS Teratas */}
         <div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
