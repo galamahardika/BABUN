@@ -49,14 +49,6 @@ const GROUPS = [
   },
 ]
 
-const INACTIVE_SYSTEMS = [
-  { label: 'Sistem B', desc: 'Analitik Prediktif' },
-  { label: 'Sistem C', desc: 'Manajemen Aset' },
-  { label: 'Sistem D', desc: 'Komunikasi Aman' },
-  { label: 'Sistem E', desc: 'Koordinasi Lapangan' },
-  { label: 'Sistem F', desc: 'Pelatihan & Simulasi' },
-  { label: 'Sistem G', desc: 'Pelaporan Eksternal' },
-]
 
 function readCollapsed() {
   try { return localStorage.getItem('navrail_collapsed') === 'true' } catch { return false }
@@ -183,32 +175,41 @@ export default function NavRail() {
         transition: 'width 200ms cubic-bezier(0.4,0,0.2,1)',
       }}>
       {/* Logo + collapse toggle */}
-      <div className="flex items-center gap-3 px-3 py-3 border-b shrink-0"
-           style={{ borderColor: '#1F2937', height: 48 }}>
-        <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-             style={{ background: 'linear-gradient(135deg,#3B82F6,#22D3D8)', boxShadow: '0 0 12px rgba(59,130,246,0.35)' }}>
-          <span className="text-xs font-bold text-white" style={{ fontFamily: 'Space Grotesk' }}>A</span>
+      {expanded ? (
+        <div className="flex items-center gap-3 px-3 border-b shrink-0"
+             style={{ borderColor: '#1F2937', height: 48 }}>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+               style={{ background: 'linear-gradient(135deg,#3B82F6,#22D3D8)', boxShadow: '0 0 12px rgba(59,130,246,0.35)' }}>
+            <span className="text-xs font-bold text-white" style={{ fontFamily: 'Space Grotesk' }}>A</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-bold leading-none" style={{ color: '#E8EDF2', fontFamily: 'Space Grotesk' }}>Sistem A</p>
+            <p className="text-xs leading-none mt-0.5" style={{ color: '#7C8A99', fontSize: 9 }}>BNPT Intel</p>
+          </div>
+          <button
+            onClick={toggle}
+            title="Sembunyikan sidebar"
+            className="shrink-0 p-1 rounded-md transition-colors"
+            style={{ color: '#7C8A99' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#E8EDF2' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#7C8A99' }}>
+            <PanelLeftClose size={15} />
+          </button>
         </div>
-        {expanded && (
-          <>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-bold leading-none" style={{ color: '#E8EDF2', fontFamily: 'Space Grotesk' }}>Sistem A</p>
-              <p className="text-xs leading-none mt-0.5" style={{ color: '#7C8A99', fontSize: 9 }}>BNPT Intel</p>
-            </div>
-          </>
-        )}
-        <button
-          onClick={toggle}
-          title={expanded ? 'Sembunyikan sidebar' : 'Tampilkan sidebar'}
-          className="shrink-0 p-1 rounded-md transition-colors"
-          style={{ color: '#7C8A99' }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#E8EDF2' }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#7C8A99' }}>
-          {expanded
-            ? <PanelLeftClose size={15} />
-            : <PanelLeftOpen  size={15} />}
-        </button>
-      </div>
+      ) : (
+        <div className="flex items-center justify-center border-b shrink-0"
+             style={{ borderColor: '#1F2937', height: 48 }}>
+          <button
+            onClick={toggle}
+            title="Tampilkan sidebar"
+            className="p-2 rounded-md transition-colors"
+            style={{ color: '#7C8A99' }}
+            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; e.currentTarget.style.color = '#E8EDF2' }}
+            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#7C8A99' }}>
+            <PanelLeftOpen size={15} />
+          </button>
+        </div>
+      )}
 
       {/* Nav groups — filter items by RBAC */}
       <div className="flex-1 py-2">
@@ -219,33 +220,6 @@ export default function NavRail() {
         })}
       </div>
 
-      {/* Inactive systems */}
-      <div className="border-t pt-2 pb-3 shrink-0" style={{ borderColor: '#1F2937' }}>
-        {expanded && (
-          <p className="px-5 py-1 text-xs uppercase tracking-widest font-semibold"
-             style={{ color: '#2D3748', fontSize: 9, letterSpacing: '0.1em' }}>
-            Platform Lainnya
-          </p>
-        )}
-        {INACTIVE_SYSTEMS.map(s => (
-          <div key={s.label}
-               title={`${s.label} — ${s.desc} (Belum tersedia)`}
-               className="flex items-center gap-3 px-3 py-2 mx-2 rounded-lg cursor-not-allowed select-none"
-               style={{ opacity: 0.25 }}>
-            <div className="w-4 h-4 rounded flex items-center justify-center shrink-0"
-                 style={{ background: '#1F2937' }}>
-              <span style={{ color: '#7C8A99', fontSize: 8, fontFamily: 'JetBrains Mono, monospace' }}>
-                {s.label.split(' ')[1]}
-              </span>
-            </div>
-            {expanded && (
-              <span className="text-xs truncate" style={{ color: '#7C8A99', fontFamily: 'Inter' }}>
-                {s.label}
-              </span>
-            )}
-          </div>
-        ))}
-      </div>
     </aside>
   )
 }
